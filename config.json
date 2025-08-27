@@ -1,0 +1,19 @@
+{
+    "siteconfig": {
+        "sitename": "Gazeta de Not\u00edcias",
+        "siteslogan": "O que voc\u00ea precisa SABER est\u00e1 aqui",
+        "sitelogo": "img/logo1.png",
+        "sitecategory": "News Portal",
+        "sitetype": "",
+        "pagetype": "homepage",
+        "sitecopyright": "&copy; 2025 - F\u00e1bio de Almeida Martins - Direitos reservados",
+        "siteowner": "Fabio de Almeida Martins",
+        "sitedeveloper": "Fabio de Almeida Martins",
+        "siteemail": "fabiomartins01@gmail.com",
+        "cpfcnpj": "",
+        "colunas": "4",
+        "favfonttype": "",
+        "datetime": "20250827T124127",
+        "lastclockserver": "https://worldtimeapi.org/api/timezone/America/Sao_Paulo"
+    }
+}
