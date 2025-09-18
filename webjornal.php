@@ -191,9 +191,9 @@ header {
                 </div>
             </div>
         </div>
-        <hr>
         <div class="div-principal">
             <h5><?php echo $dataExtenso; ?>. Confira as notícias de hoje:</h5>
+            <hr>
             <div id="container-colunas" class="container-colunas"></div>
             <!-- <div id="results"></div> -->
         </div>

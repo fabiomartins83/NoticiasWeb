@@ -209,12 +209,12 @@ label 													{font-size: 0.9em;}
 .tam37													{font-size: 3.7em;}
 .tam38													{font-size: 3.8em;}
 .tam39													{font-size: 3.9em;}
-.tam40, h1 												{font-size: 4.0em;}
+.tam40  												{font-size: 4.0em;}
 .tam41													{font-size: 4.1em;}
-.tam42													{font-size: 4.2em;}
+.tam42,													{font-size: 4.2em;}
 .tam43													{font-size: 4.3em;}
 .tam44													{font-size: 4.4em;}
-.tam45, .logo 											{font-size: 4.5em;}
+.tam45, .logo, h1										{font-size: 4.5em;}
 .tabela	 												{font-size: 1.0em} 
 
 /* Cor da fonte, de fundo e opacidade dos elementos */
