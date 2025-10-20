@@ -18,15 +18,23 @@ function formatarDataExtenso($datetimeStr) {
     $dt = DateTime::createFromFormat('Ymd\THis', $datetimeStr);
     if (!$dt) return "Data inválida";
 
-    setlocale(LC_TIME, 'pt_BR.utf8', 'pt_BR.UTF-8', 'portuguese');
-    $dataFormatada = utf8_encode(strftime('%A, %d de %B de %Y', $dt->getTimestamp()));
+    // Usando IntlDateFormatter em vez de strftime
+    $fmt = new IntlDateFormatter(
+        'pt_BR',                     // locale
+        IntlDateFormatter::FULL,      // formato de data completo
+        IntlDateFormatter::NONE,      // sem hora
+        $dt->getTimezone(),
+        IntlDateFormatter::GREGORIAN
+    );
 
-    // Verifica se a função mb_convert_case existe antes de usar
+    $dataFormatada = $fmt->format($dt);
+
+    // Usa mbstring se disponível
     if (function_exists('mb_convert_case')) {
         $dataFormatada = mb_convert_case($dataFormatada, MB_CASE_TITLE, "UTF-8");
         $dataFormatada = str_replace(["De ", "Feira"], ["de ", "feira"], $dataFormatada);
     } else {
-        // Caso mbstring não esteja habilitada, usa fallback simples
+        // fallback simples caso mbstring não esteja habilitada
         $dataFormatada = ucwords($dataFormatada);
     }
 
