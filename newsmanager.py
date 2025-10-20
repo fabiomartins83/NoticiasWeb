@@ -197,14 +197,14 @@ def editar_materia():
     id_materia = input("Digite o ID da matéria que deseja editar: ").strip()
     with conectar() as conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT id, title, author, date, publishdate, content FROM materias WHERE id=?", (id_materia,))
+        cursor.execute("SELECT id, title, author, date, publishdate, content, image FROM materias WHERE id=?", (id_materia,))
         row = cursor.fetchone()
 
     if not row:
         print("\nMatéria não encontrada.\n")
         return
 
-    codigo, titulo, autor, data_raw, publish_raw, conteudo = row
+    codigo, titulo, autor, data_raw, publish_raw, conteudo, imagem = row
     data_formatada = formatar_data(data_raw, "%d/%m/%Y %Hh%M")
 
     print(f"\nCÓDIGO: {codigo}\n")
@@ -228,12 +228,13 @@ def editar_materia():
     novo_autor = input("Novo autor (pressione Enter para manter): ").strip() or autor
     novo_publishdate = input("Nova data de publicação (YYYY-mm-ddThh:mm:ss, Enter para manter): ").strip() or publish_raw
     novo_conteudo = input("Novo conteúdo (pressione Enter para manter): ").strip() or conteudo
+    nova_imagem = input("Nova imagem principal (pressione Enter para manter): ").strip() or imagem
 
     with conectar() as conn:
         cursor = conn.cursor()
         cursor.execute(
-            "UPDATE materias SET title=?, author=?, publishdate=?, content=? WHERE id=?",
-            (novo_titulo, novo_autor, novo_publishdate, novo_conteudo, id_materia)
+            "UPDATE materias SET title=?, author=?, publishdate=?, content=?, image=? WHERE id=?",
+            (novo_titulo, novo_autor, novo_publishdate, novo_conteudo, nova_imagem, id_materia)
         )
         conn.commit()
     print("\nMatéria atualizada com sucesso!\n")
