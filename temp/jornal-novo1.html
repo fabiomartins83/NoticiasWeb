@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="pt-br" dir="ltr">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="description" content="descricao">
+		<meta name="author" content="Fabio de Almeida Martins">
+		<meta name="copyright" content="Direitos Reservados - Fabio de Almeida Martins - © 2025 ">
+		<meta name="reply-to" content="fabiomartins01@gmail.com">
+		<meta name="keywords" content="palavras-chaves, palavra-chave">
+		<meta name="rating" content="general">
+		<meta name="robots" content="noindex,nofollow">
+		<meta name="googlebots" content="noindex,nofollow">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link type="image/x-icon" rel="shortcut icon" href="./img/favicon.ico">
+		<link type="application/rss+xml" rel="alternative" title="" href="./feed.rss">
+		<link rel="start" href="./home.html">
+		<script type="text/javascript" src="./js/JQuery3-min.js"></script>
+		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+		<script type="text/javascript" src="./js/scripts.js"></script>
+		<title>Modelo de Website 01</title>
+		<link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+		<link type="text/css" rel="stylesheet" charset="utf-8" href="./css/style-novo.css">
+		<!-- 
+		<base href="https://fabiomartins83.github.io/ModeloHTML/" target="_blank">
+		<link type="text/css" rel="stylesheet" charset="utf-8" id="css-light" href="" data-href="./css/style-dark.css">
+		-->
+
+		<style type="text/css"> 
+			*, html, main {
+				margin: 0;
+				padding: 0;
+				z-index: 0;
+				box-sizing: border-box;
+			}
+			body {
+				height: 100%;
+				padding: 0;				
+				z-index: 0;
+				line-height: 1
+				font-weight: normal;
+				text-indent: 0em;
+			}
+			main {
+				margin: 0px /* 0px 20px*/;
+			}
+			a {
+				color: #00F; 
+				font-weight: normal; 
+				text-decoration: none; 
+				outline: 0 none;
+			}
+			a:hover, a:focus {
+				text-decoration: underline;
+				font-weight: bold;
+			}
+			a:link {
+				cursor: pointer;
+			}
+			h1,h2,h3,h4,h5 {
+				text-align: center;
+				font-weight: bold;
+			}
+			h1 {
+				margin: 16px 14px auto;
+				font-size: 4em; /* 3.2 */
+				clear: both;
+			}
+			h2 {
+				margin: 12px auto;
+				font-size: 3em; /* 2.3 */
+			}
+			h3 {
+				margin: 10px auto;
+				font-size: 2em; /* 1.9 */
+			}
+			h4 {
+				margin: 8px auto;
+				font-size: 1.5em; /* 1.6 */
+				font-weight: normal;
+			}
+			h5 {
+				margin: 6px auto;
+				font-size: 1.2em; /* 1.3 */
+				font-weight: normal;
+			}
+			h6 {
+				text-align: justify;
+				font-weight: bold;
+				margin: 8px auto;
+				font-size: 1.0em;
+				font-weight: normal;
+			}
+			.logo {
+				font-size: 4.5em;
+				clear: both;
+			}
+			.div-conteudo {
+				margin: 0;
+				padding: 0;
+				line-height: 1;
+			}
+			.container-main {
+                margin-top: 70px;
+				width: 100%;
+				font-family: 'Segoe UI', Tahoma, Geneva, Verdana, Helvetica, sans-serif;  /*Garamond, Georgia, 'Times New Roman', Times, serif; */
+				line-height: 1;
+				float: left;
+			}
+			.barra-lateral-direita {    
+				/*border: solid 1px #000; */
+				height: 450px;
+				right: 0px;
+				width: 15%;
+				margin: 0;
+				padding: 0 5px;
+				position: absolute;
+				float: right;
+			}
+			.div-principal {
+				/*border: solid 1px #000; */
+				left: 0px;
+				width: 78%;
+				height: fit-content; /* 450px; */
+				padding: 0;
+				margin: 0; /*margin: 0px 5px; */
+				align-items: center;
+				text-align: left;
+			}
+			.bloco-superior {
+			}
+			.container-colunas { /*
+                /* background-color: beige; */
+				width: 100%;
+                top: 0; /* 10px */
+				height: fit-content;
+				position: relative;
+				display: inline-block; /*inline-flex;*/
+				float: left;
+                margin: 0 auto;
+                padding: 10px;
+			}
+            .coluna {
+                background-color: #EEE; /* beige; */
+                width: 47%;/*  370px; */
+                min-height: 100px;
+                height: fit-content;
+                position: relative;
+                display: inline-block;
+                margin: 10px; /* 1% 0; */
+                padding: 10px; /* 0px 10px; */
+                text-align: left;
+                line-height: 1.5;
+                float: left;
+                /*top: 2%*/
+            }
+			.coluna-unica {
+				/*border: solid 1px #000; */
+				width: 78%;
+				height: fit-content;
+				position: relative;
+   	         	display: inline-block;
+   	         	padding: 10px;
+   	         	float: left;
+   	         	clear: right;
+			}
+			.container-header {
+				width: 100%;
+				height: fit-content;
+				max-height: 75px;
+				position: relative;
+				z-index: 9;
+				padding: 10px 0px;
+			}
+			.container-inferior {
+				height: 50px;
+				width: fit-content;
+				bottom: 0px;
+				min-width: 100%;
+				z-index: 10;
+				position: relative; /* fixed */
+				margin: 0px;
+				background-color: #FFF;
+			}
+            .fixa {
+                position: fixed;
+                z-index: 9;
+            }
+            #col1, #col3 {
+                position: absolute;
+                left: 2%;
+            }
+            #col2, #col4 {
+                position: absolute;
+                right: 2%;
+            }
+            .linha-cards {
+                display: flex;
+                justify-content: flex-start;
+                margin-bottom: 10px;
+            }
+            .card {
+                /* width: 23%; */
+                margin: 1%;
+                min-height: 200px; 
+                box-sizing: border-box;
+                padding: 10px;
+                background-color: #EEE; /* #f9f9f9; */
+				border: solid 1px #EEE; 
+				border-radius: 15px; 
+				box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                text-align: left;
+            }
+			.relevo {
+				border: solid 1px #EEE; 
+				box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+			}
+            .card:last-child {
+                margin-right: 0; /* remove margem do último card da linha */
+            }
+            .card-img {
+                width: 100%;
+                height: auto;
+                border-radius: 8px;
+                margin-bottom: 5px;
+            }
+            .card-title {
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+            .card-content {
+                flex-grow: 1; /* garante que o conteúdo ocupe espaço uniforme */
+                margin-bottom: 10px;
+            }
+            .card-link a {
+                font-weight: normal;
+                color: blue;
+                text-decoration: none;
+            }
+            .card-link a:hover {
+				text-decoration: underline;
+				font-weight: bold;
+            }
+            .card-vazio {
+                background: transparent;
+                border: none;
+                box-shadow: none;
+            }
+			.corpodetexto {
+				line-height: 1.5;
+				font-size: 1.1em;
+				text-align: justify;
+				font-weight: normal;
+			}
+			.central {
+				text-align: center;
+			}
+			.serif{
+				font-family: Georgia, Garamond, 'Times New Roman', Times, serif;
+			}
+			.sans-serif, .links {
+				font-family: Arial, Helvetica, sans-serif; font-weight: normal;
+			}
+			.identado{
+				text-indent: 2em;
+			}
+			.direita {
+				float: right;
+			}
+			.links {
+				font-size: 0.9em;
+			}
+			.rodape {
+				font-size: 0.9em;
+				color: #000;
+				line-height: 1;
+			}
+			/* Implementação de fonte gráfica externa */
+			@font-face {
+			    font-family: 'Old English Gothic';
+			    src: url('./fonts/OldEnglishGothic.eot?#iefix') format('embedded-opentype'),
+			        url('./fonts/OldEnglishGothic.woff2') format('woff2'),
+			        url('./fonts/OldEnglishGothic.woff') format('woff'),
+			        url('./fonts/OldEnglishGothic.svg#OldEnglishGothic') format('svg');
+			    font-weight: 100;
+			    font-style: normal;
+			}
+			.letra-gotica {
+				font-family: 'Old English Gothic', Garamond, Georgia, 'Times New Roman', Times, serif; 
+			}
+			#tituloprincipal {
+				font-size: 4.5em;
+			}
+		</style>
+	</head>
+
+	<body id="body">
+		<div id="div-conteudo letra-normal">
+			<div id="div-header" class="div-header">
+				<header id="header" class="container-header barra-superior fixa" style="background-color: darkblue;"> <!-- conteúdo da barra superior -->
+					<!--
+					-->
+					<div id="menu-superior" class="menu-superior">
+						<ul>
+							<li><a href="home.html">Home</a></li>
+							<li>
+								<a href="#">História</a>
+								<ul>
+									<li><a href="#">Origem</a></li>
+									<li><a href="#">Expansão</a></li>
+									<li><a href="#">Reconhecimento</a></li>
+								</ul>
+							</li>
+							<li>
+								<a href="#">Produtos</a>
+								<ul>
+									<li><a href="#">Para a casa</a></li>
+									<li><a href="#">Para o escritório</a></li>
+									<li><a href="#">Para indústrias</a></li>
+								</ul>
+							</li>
+							<li>
+								<a href="#">Quem somos</a>
+								<ul>
+									<li><a href="#">Fundadores</a></li>
+									<li><a href="#">Nossa equipe</a></li>
+								</ul>
+							</li>
+							<li><a href="contato.html">Contato </a></li>
+						</ul>
+					</div>
+				</header>
+			</div>
+			<div id="div-main">
+				<main id="main" class="container-main">
+					<div id="bloco-superior" class="bloco-superior">
+						<h1 id="tituloprincipal" class="titulo letra-gotica logo">Gazeta de São Paulo</h1>
+						<h4 id="subtitulo" class="titulo">O jornal do povo</h4>
+					</div>
+					<hr>
+				    <div id="div-principal" class="div-principal">
+						<a id="topo"></a>
+						<div id="coluna-unica" class="coluna-unica">
+							<h5 id="titulo2" class="titulo esquerda">Confira as notícias de hoje: </h5>
+						</div>
+						<div id="div-container-colunas-01" class="container-colunas">
+                            <div class="coluna-esq">
+                                <div id="col1" class="coluna conteudo borda-redonda relevo serif">
+                                </div>
+                                <div id="col2" class="coluna conteudo borda-redonda relevo serif">
+                                </div>
+                            </div>
+                            <div class="coluna-dir">
+                                <div id="col3" class="coluna conteudo borda-redonda relevo serif">
+                                </div>
+                                <div id="col4" class="coluna conteudo borda-redonda relevo serif">
+                                </div>
+                            </div>
+						</div>
+				    </div>
+				    <div id="barra-lateral-direita" class="barra-lateral-direita">
+					    <aside id="aside" class="aside sans-serif">
+							<h5>Menu lateral</h5>
+							<nav id="navmenuprincipal" class="links central">
+								<a href="javascript:void(0)" id="mudaEstilo">Alterar estilo</a><br>
+								<a href="javascript:void(0)" id="paraMusica" onclick="MIDIjs.stop();">Parar música</a><br>
+								<a href="#topo">Ir ao topo da página</a><br>
+								<a href="./frame.html">Voltar para a Página Inicial</a><br>
+							</nav>					    	
+					    </aside>
+				    </div>
+				    <!--
+					-->
+				</main>
+			</div>
+			<div id="div-footer" class="div-footer">
+				<footer id="footer" class="container-inferior"> <!-- conteúdo da barra inferior -->
+					<p id="rodape" class="rodape central"><small>Desenvolvido por <b>Fábio de Almeida Martins</b><br>© 2024 - Fábio de Almeida Martins - Direitos reservados</small></p>
+				</footer>
+			</div>
+		</div>
+
+<script async type="text/javascript">
+window.addEventListener("DOMContentLoaded", () => {
+
+    const containerColunas = document.querySelector(".container-colunas");
+    containerColunas.innerHTML = "<em>Carregando...</em>";
+
+    fetch("conteudo.json")
+        .then(response => {
+            if (!response.ok) throw new Error("Erro ao carregar conteudo.json");
+            return response.json();
+        })
+        .then(data => {
+
+            const reportagens = Object.values(data).filter(item => item.type === "reportagem"); // alterar "reportagem" para "card" aqui no HTML e no arquivo conteudo.json
+            containerColunas.innerHTML = "";
+
+            const maxPorLinha = 5;  // você pode alterar a constante para modificar a quantidade de colunas
+			const cardwidth = ((Math.floor(100 / maxPorLinha) - 2)/100).toLocaleString('pt-BR', {style: 'percent'});
+            let linhaAtual;
+
+            reportagens.forEach((item, index) => {
+
+                // Cria nova linha quando houver mais matérias para exibir
+                if (index % maxPorLinha === 0) {
+                    linhaAtual = document.createElement("div");
+                    linhaAtual.classList.add("linha-cards");
+                    containerColunas.appendChild(linhaAtual);
+                }
+
+                const card = document.createElement("div");
+                card.classList.add("card");
+				card.style.width = cardwidth || "23%";
+
+                let imagemHTML = "";
+
+                if (item.image) {
+                    // Cria a imagem com onload e onerror
+                    imagemHTML = `<img src="${item.image}" class="card-img" loading="lazy"
+                        onload="if(${!!item.imgrights}){var d=document.createElement('div');d.style.cssText='font-size:0.8em;text-align:right;margin-top:2px;';d.innerText='Imagem: ${item.imgrights}';this.insertAdjacentElement('afterend', d);}"
+                        onerror="this.outerHTML='<div style=&quot;font-style:italic;text-align:center;margin:20px 0px;&quot;><em>${item.imgdescript || ''}</em></div>'">`;
+                } else if (item.imgdescript) {
+                    // Caso não exista imagem, mostra apenas o texto alternativo
+                    imagemHTML = `<div style="font-style:italic;text-align:center;margin-bottom:5px;"><em>${item.imgdescript}</em></div>`;
+                }
+
+                card.innerHTML = `
+                    ${imagemHTML}
+                    ${item.title ? `<div class="card-title">${item.title}</div>` : ""}
+                    ${item.content ? `<div class="card-content corpodetexto">${item.content}[...]</div>` : ""}
+                    ${item.url ? `<div class="card-link"><a href="${item.url}" target="_blank" class="links direita">Leia mais...</a></div>` : ""}
+                `;
+
+                linhaAtual.appendChild(card);
+            });
+
+            // Preenche a última linha com cards vazios se necessário
+            const totalNaUltimaLinha = reportagens.length % maxPorLinha;
+            if (totalNaUltimaLinha > 0) {
+                const faltam = maxPorLinha - totalNaUltimaLinha;
+                for (let i = 0; i < faltam; i++) {
+                    const cardVazio = document.createElement("div");
+                    cardVazio.classList.add("card", "card-vazio");
+                    cardVazio.innerHTML = "&nbsp;"; // espaço em branco
+					cardVazio.style.width = cardwidth || "23%";
+			        cardVazio.style.visibility = "hidden";
+                    linhaAtual.appendChild(cardVazio);
+                }
+            }
+
+        })
+        .catch(err => {
+            console.error(err);
+            containerColunas.innerHTML = "<em>Erro ao carregar conteúdo.</em>";
+        });
+
+});
+</script>
+
+	</body>
+</html>
