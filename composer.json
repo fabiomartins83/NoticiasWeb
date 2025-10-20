@@ -5,7 +5,7 @@
   "extra": {
     "heroku": {
       "php": {
-        "extensions": ["mbstring"]
+        "extensions": ["mbstring", "intl"]
       }
     }
   }
