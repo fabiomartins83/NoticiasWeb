@@ -12,7 +12,7 @@ except ModuleNotFoundError:
     REPORTLAB_INSTALLED = False
     print("⚠️ Biblioteca reportlab não instalada. Execute o comando 'pip install reportlab'.")
 
-DB_FILE = "materias.db"
+DB_FILE = "conteudo.db"
 JSON_FILE = "conteudo.json"
 
 # --- Cores para terminal ---
@@ -67,9 +67,13 @@ def criar_tabela():
             textalign VARCHAR(20),
             paragrafo INTEGER DEFAULT 0,
             comentarios TEXT,
-            usrviews INTEGER,
+            cardheight INTEGER,
+            cardwidth INTEGER,
+            usrviews INTEGER DEFAULT 0,
             maislidas BOOL,
-            importante BOOL
+            important BOOL,
+            archive BOOL DEFAULT FALSE,
+            hidden BOOL DEFAULT FALSE
         )''')
         conn.commit()
 
@@ -116,7 +120,14 @@ def criar_dict_materia(r):
         "padding": r[26],
         "textalign": r[27],
         "paragrafo": r[28],
-        "comentarios": r[29]
+        "comentarios": r[29],
+        "cardheigth": r[30],
+        "cardwidth": r[31],
+        "usrviews": r[32],
+        "maislidas": r[33],
+        "important": r[34],
+        "archive": r[35],
+        "hidden": r[36]
     }
 
 # --- Cadastro ---
@@ -166,7 +177,7 @@ def listar_materias():
         data_formatada = formatar_data(data_raw, "%d/%m/%Y %Hh%M")
 
         print(f"CÓDIGO: {codigo}\n")
-        print(f'{editoria.upper()} >> {chapeu.upper()}\n')
+        print(f'{editoria.upper()}\n{chapeu.upper()}\n')
         temp = titulo if titulo else ""
         while temp:
             print(temp[:70])
@@ -197,17 +208,28 @@ def editar_materia():
     id_materia = input("Digite o ID da matéria que deseja editar: ").strip()
     with conectar() as conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT id, title, author, date, publishdate, content, image FROM materias WHERE id=?", (id_materia,))
+        cursor.execute("SELECT id, title, author, date, publishdate, content, image, imgrights, editoria, chapeu FROM materias WHERE id=?", (id_materia,))
         row = cursor.fetchone()
 
     if not row:
         print("\nMatéria não encontrada.\n")
         return
 
-    codigo, titulo, autor, data_raw, publish_raw, conteudo, imagem = row
+    codigo, titulo, autor, data_raw, publish_raw, conteudo, imagem, imgrights, editoria, chapeu = row
     data_formatada = formatar_data(data_raw, "%d/%m/%Y %Hh%M")
 
     print(f"\nCÓDIGO: {codigo}\n")
+    print(f'{editoria.upper()}\n{chapeu.upper()}\n')
+    temp = 'Imagem: ' + imagem if imagem else ""
+    while temp:
+        print(temp[:70])
+        temp = temp[70:]
+    print()
+    temp = imgrights if imgrights else ""
+    while temp:
+        print(temp[:70])
+        temp = temp[70:]
+    print()
     temp = titulo if titulo else ""
     while temp:
         print(temp[:70])
@@ -229,12 +251,15 @@ def editar_materia():
     novo_publishdate = input("Nova data de publicação (YYYY-mm-ddThh:mm:ss, Enter para manter): ").strip() or publish_raw
     novo_conteudo = input("Novo conteúdo (pressione Enter para manter): ").strip() or conteudo
     nova_imagem = input("Nova imagem principal (pressione Enter para manter): ").strip() or imagem
+    nova_legenda = input('Nova legenda da imagem principal (pressione Enter para manter): ') or imgrights
+    nova_editoria = input("Nova editoria (pressione Enter para manter): ").strip() or editoria
+    novo_chapeu = input("Novo chapéu da reportagem (pressione Enter para manter): ").strip() or chapeu
 
     with conectar() as conn:
         cursor = conn.cursor()
         cursor.execute(
-            "UPDATE materias SET title=?, author=?, publishdate=?, content=?, image=? WHERE id=?",
-            (novo_titulo, novo_autor, novo_publishdate, novo_conteudo, nova_imagem, id_materia)
+            "UPDATE materias SET title=?, author=?, publishdate=?, content=?, image=?, imgrights=?, editoria=?, chapeu=? WHERE id=?",
+            (novo_titulo, novo_autor, novo_publishdate, novo_conteudo, nova_imagem, nova_legenda, nova_editoria, novo_chapeu, id_materia)
         )
         conn.commit()
     print("\nMatéria atualizada com sucesso!\n")
@@ -318,7 +343,7 @@ def exportar_json():
 
     with conectar() as conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM materias ORDER BY id DESC")
+        cursor.execute("SELECT * FROM materias WHERE (hidden = false AND archive = false) ORDER BY id DESC")
         rows = cursor.fetchall()
 
     if not rows:

@@ -1,4 +1,7 @@
+/.git/
 /vendor/
 /temp/
 /teste/
 /backup/
+.gitignore
+*.zip

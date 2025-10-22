@@ -1,19 +1,28 @@
 {
     "siteconfig": {
         "sitename": "Gazeta de Not\u00edcias",
-        "siteslogan": "O que voc\u00ea precisa SABER est\u00e1 aqui",
+        "siteslogan": "A informa\u00e7\u00e3o de que voc\u00ea precisa",
         "sitelogo": "img/logo1.png",
         "sitecategory": "News Portal",
         "sitetype": "",
         "pagetype": "homepage",
-        "sitecopyright": "&copy; 2025 - F\u00e1bio de Almeida Martins - Direitos reservados",
+        "sitecopyright": "\u00a9 2025 - Direitos reservados",
         "siteowner": "Fabio de Almeida Martins",
         "sitedeveloper": "Fabio de Almeida Martins",
         "siteemail": "fabiomartins01@gmail.com",
         "cpfcnpj": "",
         "colunas": "4",
+        "mediatriz": "",
+        "cardheight": "",
         "favfonttype": "",
-        "datetime": "20250828T000217",
-        "lastclockserver": "https://worldtimeapi.org/api/timezone/America/Sao_Paulo"
+        "ano": "",
+        "numero": "",
+        "edicao": "1",
+        "datetime": "20251022T002725",
+        "lastclockserver": "https://worldtimeapi.org/api/timezone/America/Sao_Paulo",
+        "temperaturaatual": 12.1,
+        "nebulosidadeatual": 0,
+        "chuvaatual": 0,
+        "atualizaclima": "2025-10-22T03:00"
     }
 }
