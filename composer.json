@@ -1,0 +1,12 @@
+{
+  "require": {
+    "php": "^8.1"
+  },
+  "extra": {
+    "heroku": {
+      "php": {
+        "extensions": ["mbstring", "intl"]
+      }
+    }
+  }
+}

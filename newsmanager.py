@@ -121,7 +121,7 @@ def criar_dict_materia(r):
         "textalign": r[27],
         "paragrafo": r[28],
         "comentarios": r[29],
-        "cardheigth": r[30],
+        "cardheight": r[30],
         "cardwidth": r[31],
         "usrviews": r[32],
         "maislidas": r[33],
