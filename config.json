@@ -15,14 +15,14 @@
         "mediatriz": "",
         "cardheight": "",
         "favfonttype": "",
-        "ano": "",
-        "numero": "",
-        "edicao": "1",
+        "ano": "1",
+        "numero": "1",
+        "edicao": "",
         "datetime": "20251022T002725",
         "lastclockserver": "https://worldtimeapi.org/api/timezone/America/Sao_Paulo",
-        "temperaturaatual": 12.1,
-        "nebulosidadeatual": 0,
+        "temperaturaatual": 21.3,
+        "nebulosidadeatual": 36,
         "chuvaatual": 0,
-        "atualizaclima": "2025-10-22T03:00"
+        "atualizaclima": "20251022T113000"
     }
 }

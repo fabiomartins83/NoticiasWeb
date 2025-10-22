@@ -88,6 +88,11 @@ if (isset($_POST["atualizar_horario"])) {
     }
 }
 
+function formatarDataHora($dataHoraISO) {
+    $dt = DateTime::createFromFormat('Y-m-d\TH:i', $dataHoraISO);
+    return $dt ? $dt->format('Ymd\THis') : null;
+}
+
 // Atualizar clima e tempo
 if (isset($_POST["atualizar_clima"])) {
     $lat = -23.5505;  // Latitude de São Paulo
@@ -107,7 +112,7 @@ if (isset($_POST["atualizar_clima"])) {
             $ceuatual        = $dadosClima['hourly']['cloudcover'][$i] ?? null;
             $temperaturaatual = $climaAtual['temperature'] ?? null;
             $chuvaatual      = $dadosClima['hourly']['precipitation'][$i] ?? null;
-            $atualizaclima   = $climaAtual['time'] ?? null;
+            $atualizaclima   = formatarDataHora($climaAtual['time']) ?? null;
 
             // Lê o arquivo JSON atual
             $conteudo = file_exists($configFile) ? json_decode(file_get_contents($configFile), true) : [];

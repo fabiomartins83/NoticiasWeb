@@ -9,6 +9,14 @@ function obterDadosConfig($file, $campo) {
     return $dados["siteconfig"][$campo] ?? null;
 }
 
+function calculaNebulosidade($indice) {
+    if ($indice > 75) return "Nublado";
+    else if ($indice > 50) return "Parcialmente nublado";
+    else if ($indice > 25) return "Parcialmente ensolarado";
+    else if ($indice != null) return "Ensolarado";
+    else if ($indice == null) return "Erro na verificação de nebulosidade";
+}
+
 function formatarDataExtenso($datetimeStr) {
     if (!$datetimeStr) return "Data não disponível";
     $dt = DateTime::createFromFormat('Ymd\THis', $datetimeStr);
@@ -45,9 +53,13 @@ function formatarDataExtenso($datetimeStr) {
     return $dataFormatada;
 }
 
-$colunas = obterDadosConfig($configFile, 'colunas') ?? 3; 
+$colunas = obterDadosConfig($configFile, 'colunas') ?? 4; 
 $datetimeConfig = obterDadosConfig($configFile, 'datetime');
 $dataExtenso = formatarDataExtenso($datetimeConfig);
+$temperatura = obterDadosConfig($configFile, 'temperaturaatual') ?? null;
+$nebulosidade = calculaNebulosidade(obterDadosConfig($configFile, 'nebulosidadeatual') ?? null);
+$horarioclima = substr(obterDadosConfig($configFile, 'atualizaclima'), 9, 4);
+$horarioclima = substr($horarioclima, 0, 2) . "h" . substr($horarioclima, 2, 2);
 $titulo = obterDadosConfig($configFile, 'sitename');
 $slogan = obterDadosConfig($configFile, 'siteslogan');
 $owner = obterDadosConfig($configFile, 'siteowner');
@@ -201,14 +213,14 @@ footer {
     <header class="text-center">
         <h1 id="tituloprincipal"><?= htmlspecialchars($titulo) ?></h1>
         <h4 class="slogan"><?= htmlspecialchars($slogan) ?></h4>
-        <h6 class="cabecalho"><?= htmlspecialchars($dataExtenso) ?>. <?= htmlspecialchars($anonumero) ?></h6>
+        <h6 class="cabecalho">São Paulo: <?= htmlspecialchars($temperatura) ?> °C às <?= htmlspecialchars($horarioclima) ?>. <br><?= htmlspecialchars($dataExtenso) ?>. <br><?= htmlspecialchars($anonumero) ?></h6>
         <hr>
     </header>
 
     <div id="container-colunas" class="container-colunas"></div>
 
     <footer>
-        <p><small><b><?= htmlspecialchars($titulo) ?></b> — Desenvolvido por <?= htmlspecialchars($developer) ?><br><?= htmlspecialchars($direitos) ?></small></p>
+        <p style="line-height: 1;"><small><b><?= htmlspecialchars($titulo) ?></b> — Desenvolvido por <?= htmlspecialchars($developer) ?><br><?= htmlspecialchars($direitos) ?></small></p>
     </footer>
 </main>
 
