@@ -54,7 +54,7 @@ $mensagem = "";
 
 // Atualizar data e hora
 if (isset($_POST["atualizar_horario"])) {
-    $atualizado = false;
+    $horarioatualizado = false;
     foreach ($clockServers as $server) {
         $response = @file_get_contents($server);
         if ($response !== false) {
@@ -78,7 +78,7 @@ if (isset($_POST["atualizar_horario"])) {
                     // Lê novamente o arquivo atualizado para refletir na página imediatamente
                     $dados = json_decode(file_get_contents($configFile), true);
                     $mensagem = "✔ Arquivo atualizado com sucesso!";
-                    $atualizado = true;
+                    $horarioatualizado = true;
                 } else {
                     $mensagem = "❌ Erro ao gravar o arquivo JSON.";
                 }
@@ -86,59 +86,58 @@ if (isset($_POST["atualizar_horario"])) {
             }
         }
     }
-    if (!$atualizado && empty($mensagem)) {
+    if (!$horarioatualizado && empty($mensagem)) {
         $mensagem = "❌ Não foi possível obter os dados dos servidores.";
+    } else if ($horarioatualizado) { 
+        // atualização dos dados meteorológicos via API OpenMeteo
+        $lat = -23.5505;  // Latitude de São Paulo
+        $long = -46.6333; // Longitude de São Paulo
+        $climaatualizado = false;
+
+        $url = "https://api.open-meteo.com/v1/forecast?latitude={$lat}&longitude={$long}&hourly=temperature_2m,precipitation,cloudcover&current_weather=true&timezone=America%2FSao_Paulo";
+
+        $response = @file_get_contents($url);
+
+        if ($response !== false) {
+            $dadosClima = json_decode($response, true);
+            if ($dadosClima && isset($dadosClima['current_weather'])) {
+                $climaAtual = $dadosClima['current_weather'];
+                $i = array_search($climaAtual['time'], $dadosClima['hourly']['time']);
+
+                $ceuatual        = $dadosClima['hourly']['cloudcover'][$i] ?? null;
+                $temperaturaatual = $climaAtual['temperature'] ?? null;
+                $chuvaatual      = $dadosClima['hourly']['precipitation'][$i] ?? null;
+                $atualizaclima   = formatarDataHora($climaAtual['time']) ?? null;
+
+                // Lê o arquivo JSON atual
+                $conteudo = file_exists($configFile) ? json_decode(file_get_contents($configFile), true) : [];
+
+                $conteudo["siteconfig"]["nebulosidadeatual"]        = $ceuatual;
+                $conteudo["siteconfig"]["temperaturaatual"]         = $temperaturaatual;
+                $conteudo["siteconfig"]["chuvaatual"]               = $chuvaatual;
+                $conteudo["siteconfig"]["atualizaclima"]            = $atualizaclima;
+
+                if (file_put_contents($configFile, json_encode($conteudo, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES))) {
+                    // Lê novamente o arquivo atualizado para refletir na página imediatamente
+                    $dados = json_decode(file_get_contents($configFile), true);
+                    $mensagem = "✔ Clima atualizado com sucesso!";
+                    $climaatualizado = true;
+                } else {
+                    $mensagem = "❌ Erro ao gravar os dados de clima no JSON.";
+                }
+            }
+        }
+
+        if (!$climaatualizado && empty($mensagem)) {
+            $mensagem = "❌ Não foi possível obter os dados do clima.";
+        }
+
     }
 }
 
 function formatarDataHora($dataHoraISO) {
     $dt = DateTime::createFromFormat('Y-m-d\TH:i', $dataHoraISO);
     return $dt ? $dt->format('Ymd\THis') : null;
-}
-
-// Atualizar clima e tempo
-if (isset($_POST["atualizar_clima"])) {
-    $lat = -23.5505;  // Latitude de São Paulo
-    $long = -46.6333; // Longitude de São Paulo
-    $atualizado = false;
-
-    $url = "https://api.open-meteo.com/v1/forecast?latitude={$lat}&longitude={$long}&hourly=temperature_2m,precipitation,cloudcover&current_weather=true&timezone=America%2FSao_Paulo";
-
-    $response = @file_get_contents($url);
-
-    if ($response !== false) {
-        $dadosClima = json_decode($response, true);
-        if ($dadosClima && isset($dadosClima['current_weather'])) {
-            $climaAtual = $dadosClima['current_weather'];
-            $i = array_search($climaAtual['time'], $dadosClima['hourly']['time']);
-
-            $ceuatual        = $dadosClima['hourly']['cloudcover'][$i] ?? null;
-            $temperaturaatual = $climaAtual['temperature'] ?? null;
-            $chuvaatual      = $dadosClima['hourly']['precipitation'][$i] ?? null;
-            $atualizaclima   = formatarDataHora($climaAtual['time']) ?? null;
-
-            // Lê o arquivo JSON atual
-            $conteudo = file_exists($configFile) ? json_decode(file_get_contents($configFile), true) : [];
-
-            $conteudo["siteconfig"]["nebulosidadeatual"]        = $ceuatual;
-            $conteudo["siteconfig"]["temperaturaatual"]         = $temperaturaatual;
-            $conteudo["siteconfig"]["chuvaatual"]               = $chuvaatual;
-            $conteudo["siteconfig"]["atualizaclima"]            = $atualizaclima;
-
-            if (file_put_contents($configFile, json_encode($conteudo, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES))) {
-                // Lê novamente o arquivo atualizado para refletir na página imediatamente
-                $dados = json_decode(file_get_contents($configFile), true);
-                $mensagem = "✔ Clima atualizado com sucesso!";
-                $atualizado = true;
-            } else {
-                $mensagem = "❌ Erro ao gravar os dados de clima no JSON.";
-            }
-        }
-    }
-
-    if (!$atualizado && empty($mensagem)) {
-        $mensagem = "❌ Não foi possível obter os dados do clima.";
-    }
 }
 
 // Salvar configurações
@@ -310,40 +309,41 @@ button:hover { background: #0056b3; }
 <!-- Coluna 3 -->
 <div class="column">
     <div class="datahora">
-        <h2>Atualizar Data e Hora</h2>
-        <?php if (!empty($dados["siteconfig"]["datetime"])): ?>
-            <div class="info">
-                <strong>Última Data Atualizada:</strong><br>
-                <?= formatarData($dados['siteconfig']['datetime']); ?><br>
-                <strong>Servidor Utilizado:</strong><br>
-                <?= $dados['siteconfig']['lastclockserver'] ?: '-'; ?><br>
-                <strong>Arquivo gravado:</strong><br>
-                <?= $configFile; ?>
-            </div>
-        <?php else: ?>
-            <p><strong>Última atualização:</strong> Ainda não houve atualização.</p>
-        <?php endif; ?>
-        <form method="post">
-            <button type="submit" name="atualizar_horario">Atualizar data e hora</button>
-        </form>
-    </div>
-    <div class="tempoclima">
-        <h2>Atualizar Clima e Tempo</h2>
-        <?php if (!empty($dados["siteconfig"]["atualizaclima"])): ?>
-            <div class="info">
-                <strong>Última Atualização de Clima/Tempo:</strong><br>
-                <?= formatarData($dados['siteconfig']['atualizaclima']); ?><br>
-                <strong>Servidor Utilizado:</strong><br>https://api.open-meteo.com/v1/forecast<br>
-                <strong>Arquivo gravado:</strong><br>
-                <?= $configFile; ?>
-            </div>
-        <?php else: ?>
-            <p><strong>Última atualização:</strong> Ainda não houve atualização.</p>
-        <?php endif; ?>
-        <form method="post">
-            <button type="submit" name="atualizar_clima">Atualizar clima e tempo</button>
-        </form>
-    </div>
+
+    <h2>Atualizar data, hora e dados climáticos</h2>
+
+    <!-- Informações de Data/Hora -->
+    <?php if (!empty($dados["siteconfig"]["datetime"])): ?>
+        <div class="info">
+            <strong>Última Data Atualizada:</strong><br>
+            <?= formatarData($dados['siteconfig']['datetime']); ?><br>
+            <strong>Servidor Utilizado:</strong><br>
+            <?= $dados['siteconfig']['lastclockserver'] ?: '-'; ?><br>
+            <strong>Arquivo gravado:</strong><br>
+            <?= $configFile; ?>
+        </div>
+    <?php else: ?>
+        <p><strong>Última atualização:</strong> Ainda não houve atualização de data/hora.</p>
+    <?php endif; ?>
+
+    <!-- Informações de Clima/Tempo -->
+    <?php if (!empty($dados["siteconfig"]["atualizaclima"])): ?>
+        <div class="info" style="margin-top:10px;">
+            <strong>Última Atualização de Clima/Tempo:</strong><br>
+            <?= formatarData($dados['siteconfig']['atualizaclima']); ?><br>
+            <strong>Servidor Utilizado:</strong><br>
+            https://api.open-meteo.com/v1/forecast<br>
+            <strong>Arquivo gravado:</strong><br>
+            <?= $configFile; ?>
+        </div>
+    <?php else: ?>
+        <p><strong>Última atualização:</strong> Ainda não houve atualização de clima/tempo.</p>
+    <?php endif; ?>
+
+    <!-- Botão unificado -->
+    <form method="post" style="margin-top:10px;">
+        <button type="submit" name="atualizar_horario_clima">Atualizar Data/Hora e Clima</button>
+    </form>
 </div>
 
 </body>

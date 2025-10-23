@@ -106,10 +106,10 @@ function formatarDataExtenso($datetimeStr) {
 $colunas = obterDadosConfig($configFile, 'colunas') ?? 4; 
 $datetimeConfig = obterDadosConfig($configFile, 'datetime');
 $dataExtenso = formatarDataExtenso($datetimeConfig);
-$temperatura = obterDadosConfig($configFile, 'temperaturaatual') ?? null;
-$pluviosidade = obterDadosConfig($configFile, 'chuvaatual') ?? null;
-$horarioclima = substr(obterDadosConfig($configFile, 'atualizaclima'), 9, 4);
-$nebulosidade = calculaNebulosidade(obterDadosConfig($configFile, 'nebulosidadeatual'), $pluviosidade, $horarioclima);
+$temperaturaSp = obterDadosConfig($configFile, 'temperaturaatual') ?? null;
+$pluviosidadeSp = obterDadosConfig($configFile, 'chuvaatual') ?? null;
+$horarioclimaSp = substr(obterDadosConfig($configFile, 'atualizaclima'), 9, 4);
+$nebulosidadeSp = calculaNebulosidade(obterDadosConfig($configFile, 'nebulosidadeatual'), $pluviosidadeSp, $horarioclimaSp);
 $titulo = obterDadosConfig($configFile, 'sitename');
 $slogan = obterDadosConfig($configFile, 'siteslogan');
 $owner = obterDadosConfig($configFile, 'siteowner');
@@ -351,7 +351,7 @@ if (!empty($anonumero)) $anonumero .= ". ";
                 <?= htmlspecialchars($dataExtenso) ?>.
             </div>
             <div class="cabecalho-item cab-center">
-                <span class="letreiro"><?php if ($temperatura): ?>São Paulo: <?php if (!empty($nebulosidade)) echo htmlspecialchars(ucfirst($nebulosidade)) . ', '; ?><?= htmlspecialchars($temperatura) ?> °C às <?= htmlspecialchars(substr($horarioclima, 0, 2) . "h" . substr($horarioclima, 2, 2)) ?>. <?php endif; ?> </span>
+                <span class="letreiro"><?php if ($temperaturaSp): ?>São Paulo (SP): <?php if (!empty($nebulosidadeSp)) echo htmlspecialchars(ucfirst($nebulosidadeSp)) . ', '; ?><?= htmlspecialchars($temperaturaSp) ?> °C às <?= htmlspecialchars(substr($horarioclimaSp, 0, 2) . "h" . substr($horarioclimaSp, 2, 2)) ?>. <?php endif; ?> </span>
             </div>
             <div class="cabecalho-item cab-right">
                 <?= htmlspecialchars($anonumero) ?>
