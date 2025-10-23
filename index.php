@@ -449,17 +449,36 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
-        // Skeletons de carregamento
-        container.innerHTML = "";
-        for (let i = 0; i < numColunas * 2; i++) {
-            const skeleton = document.createElement("div");
-            skeleton.classList.add("skeleton");
-            // s.style.flex = `0 0 ${(100 - (numColunas - 1) * gapPercent) / numColunas}%`;
-            skeleton.style.gap = `${gapPercent}%`;
-            skeleton.classList.add("linha-cards");
-            skeleton.style.padding = cardPadding; 
-            container.appendChild(skeleton);
+    // Skeletons de carregamento
+    container.innerHTML = "";
+
+    // Cria uma linha temporária
+    let linhaSkeleton = document.createElement("div");
+    linhaSkeleton.classList.add("linha-cards");
+    linhaSkeleton.style.display = "flex";
+    linhaSkeleton.style.gap = `${gapPercent}%`;
+
+    for (let i = 0; i < numColunas * 2; i++) {
+        const skeleton = document.createElement("div");
+        skeleton.classList.add("skeleton");
+        skeleton.style.flex = `0 0 ${cardWidth}%`; // largura igual aos cards reais
+        skeleton.style.padding = cardPadding;
+        linhaSkeleton.appendChild(skeleton);
+
+        // A cada numColunas skeletons, cria uma nova linha
+        if ((i + 1) % numColunas === 0) {
+            container.appendChild(linhaSkeleton);
+            linhaSkeleton = document.createElement("div");
+            linhaSkeleton.classList.add("linha-cards");
+            linhaSkeleton.style.display = "flex";
+            linhaSkeleton.style.gap = `${gapPercent}%`;
         }
+    }
+
+    // Se sobrar skeletons que não completam a linha
+    if (linhaSkeleton.childNodes.length > 0) {
+        container.appendChild(linhaSkeleton);
+    }
 
         try {
             const conteudoJSON = await extrairConteudo(arquivo, campo, valor);
