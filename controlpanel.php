@@ -75,6 +75,8 @@ if (isset($_POST["atualizar_horario"])) {
                 $dados["siteconfig"]["lastclockserver"] = $server;
 
                 if (file_put_contents($configFile, json_encode($dados, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES))) {
+                    // Lê novamente o arquivo atualizado para refletir na página imediatamente
+                    $dados = json_decode(file_get_contents($configFile), true);
                     $mensagem = "✔ Arquivo atualizado com sucesso!";
                     $atualizado = true;
                 } else {
@@ -124,6 +126,8 @@ if (isset($_POST["atualizar_clima"])) {
             $conteudo["siteconfig"]["atualizaclima"]            = $atualizaclima;
 
             if (file_put_contents($configFile, json_encode($conteudo, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES))) {
+                // Lê novamente o arquivo atualizado para refletir na página imediatamente
+                $dados = json_decode(file_get_contents($configFile), true);
                 $mensagem = "✔ Clima atualizado com sucesso!";
                 $atualizado = true;
             } else {
