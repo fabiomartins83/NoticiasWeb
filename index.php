@@ -455,8 +455,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Cria uma linha temporária
     let linhaSkeleton = document.createElement("div");
     linhaSkeleton.classList.add("linha-cards");
+    // Ao criar a linha (skeleton ou cards reais), adicione:
     linhaSkeleton.style.display = "flex";
     linhaSkeleton.style.gap = `${gapPercent}%`;
+    linhaSkeleton.style.flexWrap = "wrap";  // permite múltiplas linhas
+    linhaSkeleton.style.margin = "0";      // remove margem extra da linha
 
     for (let i = 0; i < numColunas * 2; i++) {
         const skeleton = document.createElement("div");
@@ -490,22 +493,41 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
             const fragment = document.createDocumentFragment();
+            // Ao criar cada linha de cards reais:
             let linha = document.createElement("div");
             linha.classList.add("linha-cards");
+            linha.style.display = "flex";
+            linha.style.flexWrap = "wrap";      // permite múltiplas linhas
+            linha.style.justifyContent = "flex-start"; // primeiro card à esquerda
+            linha.style.gap = `${gapPercent}%`; // gap entre os cards
 
             let countVisible = 0;
-            conteudoJSON.forEach((item) => {
+            conteudoJSON.forEach((item, index) => {
                 const card = criarCard(item);
-                if (card) linha.appendChild(card);
+                if (!card) return;
 
+                // Ajuste opcional: remove margin extra no último card da linha
+                const posCol = countVisible % numColunas;
+                if (posCol === numColunas - 1) {
+                    card.style.marginRight = "0";
+                }
+
+                linha.appendChild(card);
                 countVisible++;
+
+                // Ao completar a linha, cria nova linha
                 if (countVisible % numColunas === 0) {
                     fragment.appendChild(linha);
                     linha = document.createElement("div");
                     linha.classList.add("linha-cards");
+                    linha.style.display = "flex";
+                    linha.style.flexWrap = "wrap";
+                    linha.style.justifyContent = "flex-start";
+                    linha.style.gap = `${gapPercent}%`;
                 }
             });
 
+            // Append final se sobrar cards
             if (linha.childNodes.length > 0) fragment.appendChild(linha);
             container.appendChild(fragment);
 
