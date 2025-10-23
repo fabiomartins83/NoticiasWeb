@@ -454,8 +454,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         for (let i = 0; i < numColunas * 2; i++) {
             const s = document.createElement("div");
             s.classList.add("skeleton");
-            s.style.flex = `0 0 ${(100 - (numColunas - 1) * 2) / numColunas}%`;
-            s.style.padding = cardPadding; // aplica padding também nos skeletons
+            // usa o mesmo cálculo e variáveis dos cards reais:
+            s.style.flex = `0 0 ${cardWidth}%`;
+            s.style.padding = cardPadding;
             container.appendChild(s);
         }
 
