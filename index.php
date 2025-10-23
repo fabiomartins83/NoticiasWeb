@@ -113,7 +113,7 @@ $owner = obterDadosConfig($configFile, 'siteowner');
 $developer = obterDadosConfig($configFile, 'sitedeveloper');
 $direitos = obterDadosConfig($configFile, 'sitecopyright');
 
-// cria a variável $anonumero, que armazena Ano, Número e Edição 
+// cria a variável $anonumero
 $anonumero = "";
 if (obterDadosConfig($configFile, 'ano')) $anonumero = "Ano " . obterDadosConfig($configFile, 'ano');
 if (obterDadosConfig($configFile, 'numero')) {
@@ -144,15 +144,19 @@ if (!empty($anonumero)) $anonumero .= ". ";
     body {
         margin: 0 5%;
         font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
-        background-color:#EEE;
-        color:#000;
-        line-height:1.4;
+        background-color: #F5F5F5; /* antigo #EEE */
+        color: #222; /* antigo #000 */
+        line-height: 1;
     }
     h1,h2,h3,h4,h5,h6 { margin:0; }
-    a { color: #000; text-decoration:none; }
-    a:hover {color: inherit; }
-    a.link {color: #00F; text-decoration: none; font-weight: bold;}
-    a.hover:hover { text-decoration:underline; font-weight:bold; }
+    a, a:hover { color: #000; text-decoration:none; }
+    a.link {
+        color: #00D;
+        text-decoration: none; 
+        font-weight: bold;}
+    a.hover:hover { 
+        text-decoration:underline; 
+        font-weight:bold; }
     main { width:100%; }
     h1#tituloprincipal {
         font-family: Garamond, 'Times New Roman', serif;
@@ -172,29 +176,64 @@ if (!empty($anonumero)) $anonumero .= ". ";
         line-height: 1;
     }
     .container-colunas {
-        display:flex;
-        flex-wrap:wrap;
-        gap:2%;
-        margin:1%;
-        justify-content:flex-start;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2%;
+        margin: 0;              /* remove deslocamento lateral */
+        padding: 0;             /* garante alinhamento */
+        width: 100%;
     }
+
     .linha-cards {
-        display:flex;
-        width:100%;
-        gap:2%;
-        margin:1%;
-        flex-wrap:nowrap;
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 2%;
+        justify-content: flex-start;
+        align-items: stretch;
+        width: 100%;
+        margin: 0 auto;         /* centraliza se o container tiver max-width */
+        padding: 0;             /* zera qualquer recuo */
     }
     .card {
-        flex:1;
-        background:#FFF;
-        border-radius:5px;
-        border: 1px #000;
-        padding:5px;
-        min-height:200px;
-        display:flex;
-        flex-direction:column;
-        justify-content:space-between;
+        background-color: #ffffff;
+        color: #222222;
+        border-radius: 5px;
+        margin: 0;
+        overflow: hidden;
+        width: 100%;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        /* box-shadow: 0 2px 10px rgba(0,0,0,0.1); */
+    }
+
+    /* padding dinâmico com base em data-padding */
+    .card[data-padding] {
+        padding: attr(data-padding px, 16px);
+    }
+
+    /* Fallback para navegadores que não suportam attr() */
+    @supports not (padding: attr(data-padding px, 16px)) {
+        .card {
+            padding: 16px; /* valor padrão */
+        }
+    }
+/*
+    .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+    }
+*/
+    .card h2 {
+        font-size: 1.2rem;
+        margin: 0 0 8px 0;
+        color: #111111;
+    }
+
+    .card p {
+        font-size: 0.95rem;
+        line-height: 1.5;
+        margin: 0;
+        color: #333333;
     }
     .card-img {
         width:100%;
@@ -206,7 +245,7 @@ if (!empty($anonumero)) $anonumero .= ". ";
         font-weight:bold;
         text-align:center;
         line-height: 1;
-        margin:8px 0;
+        margin: 12px 0;
         word-break: break-word;
         text-decoration:none !important;
         color:#000 !important;
@@ -217,12 +256,13 @@ if (!empty($anonumero)) $anonumero .= ". ";
         text-align:justify;
         margin-bottom:10px;
         font-family:'Georgia','Times New Roman','serif'; 
+        line-height: 1.5;
     }
     .img-legenda, .img-descricao {
-        font-size:0.8em;
+        font-size:0.75em;
         text-align:right;
         color:inherit;
-        margin:4px 0;
+        margin:0;
         line-height: 1;
     }
     footer {
@@ -231,7 +271,7 @@ if (!empty($anonumero)) $anonumero .= ". ";
         padding:10px 0;
         border-top:1px solid #ccc;
         font-size:0.85em;
-        color:#333;
+        color: #555;
     }
     .cabecalho {
         display: flex;
@@ -309,8 +349,23 @@ if (!empty($anonumero)) $anonumero .= ". ";
 
 <script>
 document.addEventListener("DOMContentLoaded", async () => {
-    const numColunas = <?= (int)$colunas ?>;
-    const gapPercent = 2;
+    // --- Lê configurações diretamente do config.json ---
+    async function carregarConfig() {
+        try {
+            const resp = await fetch("config.json");
+            if (!resp.ok) throw new Error("Erro ao carregar config.json");
+            const json = await resp.json();
+            return json.siteconfig || {};
+        } catch (e) {
+            console.error("Falha ao carregar configurações:", e);
+            return {};
+        }
+    }
+
+    const config = await carregarConfig();
+    const numColunas = parseInt(config.colunas || 4);
+    const cardPadding = config.cardpadding || "5px";
+    const gapPercent = parseFloat(config.gappercent || 2); // ← lê o valor do JSON
     const cardWidth = (100 - (numColunas - 1) * gapPercent) / numColunas;
 
     // Função para criar cada item card
@@ -318,6 +373,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!item || !item.title) return null;
         const card = document.createElement("div");
         card.classList.add("card");
+        card.style.flex = `0 0 ${cardWidth}%`;
+        card.style.padding = cardPadding; // ← aplica o padding dinâmico aqui
 
         let imgHTML = "";
         if (item.image) {
@@ -326,7 +383,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     <a href="${item.url || '#'}" target="_blank" rel="noopener noreferrer">
                         <img src="${item.image}" class="card-img" loading="lazy" alt="${item.title}">
                     </a>
-                    ${item.imgrights ? `<p class="img-legenda"><em>${item.imgrights}</em></p>` : ""}
+                    ${item.imgrights ? `<p class="img-legenda">${item.imgrights}</p>` : ""}
                 </div>`;
         } else if (item.imgdescript) {
             imgHTML = `<p class="img-descricao"><em>${item.imgdescript}</em></p>`;
@@ -335,7 +392,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const dataPubl = item.datetime ? new Date(item.datetime).toLocaleDateString("pt-BR") : "";
 
         card.innerHTML = `
-            ${item.chapeu ? `<div class="direita" style="font-size:0.8em;font-weight:bold;text-transform:uppercase;margin-bottom:4px;">${item.chapeu}</div>` : ""}
+            ${item.chapeu ? `<div class="direita" style="font-size:0.8em;font-weight:bold;text-transform:uppercase;margin: 0 0 6px;">${item.chapeu}</div>` : ""}
             ${imgHTML}
             <div class="card-title">
                 <a href="${item.url || '#'}" class="hover" target="_blank" rel="noopener noreferrer">${item.title}</a>
@@ -346,18 +403,17 @@ document.addEventListener("DOMContentLoaded", async () => {
                 ${item.url ? `<a href="${item.url}" class="link hover" target="_blank" rel="noopener noreferrer">Leia mais</a>` : ""}</p>
             </div>`;
 
-        card.style.flex = `0 0 ${cardWidth}%`;
         if (item.cardheight) {
             const altura = parseInt(item.cardheight, 10);
             if (!isNaN(altura)) card.style.height = `${altura}px`;
         } else {
-            card.style.height = 'auto';
+            card.style.height = "auto";
         }
 
         return card;
     }
 
-    // Função para ler o arquivo JSON
+    // Função para ler o arquivo JSON de conteúdo
     async function extrairConteudo(arquivo, campo = null, valor = null) {
         try {
             const responseJson = await fetch(arquivo);
@@ -368,7 +424,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 i => i && i.type === "reportagem" && i.hidden === false && i.archive === false
             );
 
-            // filtro opcional por campo/valor
             if (campo && valor !== null) {
                 const vLower = (typeof valor === "string") ? valor.toLowerCase() : valor;
                 conteudoArquivo = conteudoArquivo.filter(item => {
@@ -385,22 +440,22 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    // 🧩 NOVA FUNÇÃO: monta as linhas e cards dinamicamente
+    // Monta as linhas e cards dinamicamente
     async function preencherConteudo(containerId, arquivo, campo = null, valor = null) {
         const container = document.getElementById(containerId);
         if (!container) {
             console.error(`Container "${containerId}" não encontrado.`);
-            // Exibe mensagem na página
             document.body.innerHTML += `<p><em>Erro ao carregar o conteúdo.</em></p>`;
             return;
         }
 
-        // skeletons de carregamento
+        // Skeletons de carregamento
         container.innerHTML = "";
         for (let i = 0; i < numColunas * 2; i++) {
             const s = document.createElement("div");
             s.classList.add("skeleton");
             s.style.flex = `0 0 ${(100 - (numColunas - 1) * 2) / numColunas}%`;
+            s.style.padding = cardPadding; // aplica padding também nos skeletons
             container.appendChild(s);
         }
 
@@ -439,7 +494,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    // --- Chamada prática (substitui o código antigo direto) ---
+    // Chamada principal
     preencherConteudo("container-conteudo-01", "conteudo.json", "type", "reportagem");
 });
 </script>

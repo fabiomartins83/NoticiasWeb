@@ -25,8 +25,9 @@ $defaultConfig = [
         "siteemail" => "fabiomartins01@gmail.com",
         "cpfcnpj" => "",
         "colunas" => "4",
-        "mediatriz" => "",
+        "gappercent" => "2",
         "cardheight" => "",
+        "cardpadding" => "5px",
         "favfonttype" => "",
         "ano" => "I",
         "numero" => "1",
@@ -141,7 +142,7 @@ if (isset($_POST["salvar_config"])) {
     $campos = [
         "sitename","siteslogan","sitelogo","sitecategory","sitetype","pagetype",
         "sitecopyright","siteowner","sitedeveloper","siteemail","cpfcnpj",
-        "colunas","mediatriz","cardheight","favfonttype","ano","numero","edicao"
+        "colunas","gappercent","cardheight","cardpadding","favfonttype","ano","numero","edicao"
     ];
 
     foreach ($campos as $campo) {
@@ -277,11 +278,14 @@ button:hover { background: #0056b3; }
         <?php endfor; ?>
     </select>
 
-    <label>Mediatriz:</label>
-    <input type="text" name="mediatriz" value="<?= htmlspecialchars($dados['siteconfig']['mediatriz']) ?>">
+    <label>Medianiz ou margem entre os cards (%):</label>
+    <input type="text" name="gappercent" value="<?= htmlspecialchars($dados['siteconfig']['gappercent']) ?>">
 
     <label>Altura dos cards:</label>
     <input type="text" name="cardheight" value="<?= htmlspecialchars($dados['siteconfig']['cardheight']) ?>">
+
+    <label>Margem interna (de conteúdo) dos cards:</label>
+    <input type="text" name="cardpadding" value="<?= htmlspecialchars($dados['siteconfig']['cardpadding']) ?>">
 
     <label>Fonte padrão:</label>
     <input type="text" name="favfonttype" value="<?= htmlspecialchars($dados['siteconfig']['favfonttype']) ?>">
