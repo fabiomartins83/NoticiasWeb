@@ -150,9 +150,9 @@ if (!empty($anonumero)) $anonumero .= ". ";
     }
     h1,h2,h3,h4,h5,h6 { margin:0; }
     a { color: #000; text-decoration:none; }
-    a:hover {color: inherit; text-decoration: underline;}
+    a:hover {color: inherit; }
     a.link {color: #00F; text-decoration: none; font-weight: bold;}
-    a.link:hover { color: #00F; text-decoration:underline; font-weight:bold; }
+    a.hover:hover { text-decoration:underline; font-weight:bold; }
     main { width:100%; }
     h1#tituloprincipal {
         font-family: Garamond, 'Times New Roman', serif;
@@ -338,12 +338,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             ${item.chapeu ? `<div class="direita" style="font-size:0.8em;font-weight:bold;text-transform:uppercase;margin-bottom:4px;">${item.chapeu}</div>` : ""}
             ${imgHTML}
             <div class="card-title">
-                <a href="${item.url || '#'}" target="_blank" rel="noopener noreferrer">${item.title}</a>
+                <a href="${item.url || '#'}" class="hover" target="_blank" rel="noopener noreferrer">${item.title}</a>
             </div>
             <p class="direita" style="font-size:0.75em;">${dataPubl}</p>
             <div class="card-content">
                 <p>${item.location ? `<b>${item.location.toUpperCase()} - </b>` : ""}${item.content || ""} […] 
-                ${item.url ? `<a href="${item.url}" class="link" target="_blank" rel="noopener noreferrer">Leia mais</a>` : ""}</p>
+                ${item.url ? `<a href="${item.url}" class="link hover" target="_blank" rel="noopener noreferrer">Leia mais</a>` : ""}</p>
             </div>`;
 
         card.style.flex = `0 0 ${cardWidth}%`;
