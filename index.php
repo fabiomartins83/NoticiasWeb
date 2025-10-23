@@ -205,8 +205,9 @@ if (!empty($anonumero)) $anonumero .= ". ";
         margin: 0;
         overflow: hidden;
         width: 100%;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-        /* box-shadow: 0 2px 10px rgba(0,0,0,0.1); */
+        border: none;
+        /* transition: transform 0.2s ease, box-shadow 0.2s ease;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1); */
     }
 
     /* padding dinâmico com base em data-padding */
@@ -297,14 +298,28 @@ if (!empty($anonumero)) $anonumero .= ". ";
         text-align: left;
     }
 
-    .cab-center {
-        text-align: center;
-    /*    font-weight: bold;*/
-    }
-
     .cab-right {
         text-align: right;
     }
+
+    .cab-center {
+        text-align: center;
+        overflow: hidden;       /* oculta o excesso de texto */
+        white-space: nowrap;    /* mantém o texto em uma linha */
+        box-sizing: border-box;
+    }
+
+    .cab-center span.letreiro {
+        display: inline-block;
+        padding-left: 100%;    /* espaço inicial fora da tela */
+        animation: scroll-letreiro 12s linear infinite;
+    }
+
+    @keyframes scroll-letreiro {
+        0%   { transform: translateX(0); }
+        100% { transform: translateX(-100%); }
+    }
+
     .skeleton {
         border: none;
         padding:5px;
@@ -333,10 +348,10 @@ if (!empty($anonumero)) $anonumero .= ". ";
         <h4 class="slogan"><?= htmlspecialchars($slogan) ?></h4>
         <div class="cabecalho">
             <div class="cabecalho-item cab-left">
-                <?php if ($temperatura): ?>São Paulo: <?php if (!empty($nebulosidade)) echo htmlspecialchars($nebulosidade) . ', '; ?><?= htmlspecialchars($temperatura) ?> °C às <?= htmlspecialchars(substr($horarioclima, 0, 2) . "h" . substr($horarioclima, 2, 2)) ?>. <?php endif; ?>
+                <?= htmlspecialchars($dataExtenso) ?>.
             </div>
             <div class="cabecalho-item cab-center">
-                <?= htmlspecialchars($dataExtenso) ?>.
+                <span class="letreiro"><?php if ($temperatura): ?>São Paulo: <?php if (!empty($nebulosidade)) echo htmlspecialchars($nebulosidade) . ', '; ?><?= htmlspecialchars($temperatura) ?> °C às <?= htmlspecialchars(substr($horarioclima, 0, 2) . "h" . substr($horarioclima, 2, 2)) ?>. <?php endif; ?> </span>
             </div>
             <div class="cabecalho-item cab-right">
                 <?= htmlspecialchars($anonumero) ?>
