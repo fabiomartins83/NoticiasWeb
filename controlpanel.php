@@ -5,6 +5,7 @@ $configFile = "config.json";
 $location = "America/Sao_Paulo";
 $lat = -23.5505;
 $long = -46.6333;
+$mensagem_sucesso = "";  // inicializa apenas, sem chamar funções
 
 $clockServers = [
     "https://worldtimeapi.org/api/timezone/",
@@ -142,6 +143,9 @@ if (isset($_POST["atualizar_horario_clima"])) {
         $res2 = atualizaClimaTempo($lat, $long);
         $mensagem .= "<br>" . $res2["message"];
     }
+    if (!empty($res1["success"]) && (!isset($res2) || $res2["success"])) {
+        $mensagem_sucesso = "✔ Atualização concluída com sucesso!";
+    }
 }
 
 // =========================================================
@@ -244,6 +248,16 @@ button:hover { background: #0056b3; }
     border-radius: 6px;
 }
 .success { color: green; }
+.sucesso {
+    color: #2e7d32;
+    background-color: #e8f5e9;
+    border: 1px solid #c8e6c9;
+    padding: 8px 10px;
+    border-radius: 6px;
+    margin-top: 10px;
+    font-weight: bold;
+    text-align: center;
+}
 .error { color: red; }
 </style>
 </head>
@@ -321,11 +335,9 @@ button:hover { background: #0056b3; }
     <button type="button" onclick="window.close()" style="margin-top:8px;background:#6c757d;">Cancelar</button>
 </form>
             
-<!-- Coluna 3 -->
+<!-- Coluna 3 unificada -->
 <div class="column">
-    <div class="datahora">
-
-    <h2>Atualizar data, hora e dados climáticos</h2>
+    <h2>Atualizar Data, Hora e Clima</h2>
 
     <!-- Informações de Data/Hora -->
     <?php if (!empty($dados["siteconfig"]["datetime"])): ?>
@@ -359,6 +371,11 @@ button:hover { background: #0056b3; }
     <form method="post" style="margin-top:10px;">
         <button type="submit" name="atualizar_horario_clima">Atualizar Data/Hora e Clima</button>
     </form>
+
+    <!-- Mensagem de sucesso -->
+    <?php if (!empty($mensagem_sucesso)): ?>
+        <p class="sucesso"><?= $mensagem_sucesso; ?></p>
+    <?php endif; ?>
 </div>
 
 </body>

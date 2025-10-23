@@ -19,11 +19,11 @@
         "ano": "1",
         "numero": "1",
         "edicao": "",
-        "datetime": "20251023T122448",
+        "datetime": "20251023T124254",
         "lastclockserver": "https://worldtimeapi.org/api/timezone/America/Sao_Paulo",
-        "temperaturaatual": 23,
+        "temperaturaatual": 23.1,
         "nebulosidadeatual": 32,
         "chuvaatual": 0,
-        "atualizaclima": "20251023T121500"
+        "atualizaclima": "20251023T123000"
     }
 }
