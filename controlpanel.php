@@ -2,11 +2,13 @@
 // control-panel.php
 ini_set('default_charset', 'UTF-8');
 $configFile = "config.json";
+$location = "America/Sao_Paulo";
+$lat = -23.5505;
+$long = -46.6333;
 
-// Servidores de relógio atômico
 $clockServers = [
-    "https://worldtimeapi.org/api/timezone/America/Sao_Paulo",
-    "https://timeapi.io/api/Time/current/zone?timeZone=America/Sao_Paulo",
+    "https://worldtimeapi.org/api/timezone/",
+    "https://timeapi.io/api/Time/current/zone?timeZone=",
     "https://worldclockapi.com/api/json/br/now"
 ];
 
@@ -41,21 +43,28 @@ $defaultConfig = [
     ]
 ];
 
-// Lê ou cria config.json
-if (file_exists($configFile)) {
-    $json = file_get_contents($configFile);
-    $dados = json_decode($json, true);
-    if (!$dados) $dados = $defaultConfig;
-} else {
-    $dados = $defaultConfig;
-}
+// Lê config.json ou cria novo
+$dados = file_exists($configFile)
+    ? json_decode(file_get_contents($configFile), true)
+    : $defaultConfig;
+if (!$dados) $dados = $defaultConfig;
 
 $mensagem = "";
 
-// Atualizar data e hora
-if (isset($_POST["atualizar_horario"])) {
-    $horarioatualizado = false;
-    foreach ($clockServers as $server) {
+// =========================================================
+// Funções: Atualiza Data e Hora + Atualiza Clima e Tempo
+// =========================================================
+function atualizaDataHora($location) {
+    global $clockServers, $configFile, $dados;
+
+    $clockServersCompletos = array_map(function($url) use ($location) {
+        if ((substr($url, -1) === '/') || (strpos($url, '=') !== false)) {
+            return $url . $location;
+        }
+        return $url;
+    }, $clockServers);
+
+    foreach ($clockServersCompletos as $server) {
         $response = @file_get_contents($server);
         if ($response !== false) {
             $dadosServ = json_decode($response, true);
@@ -75,72 +84,83 @@ if (isset($_POST["atualizar_horario"])) {
                 $dados["siteconfig"]["lastclockserver"] = $server;
 
                 if (file_put_contents($configFile, json_encode($dados, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES))) {
-                    // Lê novamente o arquivo atualizado para refletir na página imediatamente
-                    $dados = json_decode(file_get_contents($configFile), true);
-                    $mensagem = "✔ Arquivo atualizado com sucesso!";
-                    $horarioatualizado = true;
+                    $dados = json_decode(file_get_contents($configFile), true); // recarrega dados
+                    return ["success" => true, "message" => "✔ Data e hora atualizadas com sucesso!"];
                 } else {
-                    $mensagem = "❌ Erro ao gravar o arquivo JSON.";
+                    return ["success" => false, "message" => "❌ Erro ao gravar o arquivo JSON."];
                 }
-                break;
             }
         }
     }
-    if (!$horarioatualizado && empty($mensagem)) {
-        $mensagem = "❌ Não foi possível obter os dados dos servidores.";
-    } else if ($horarioatualizado) { 
-        // atualização dos dados meteorológicos via API OpenMeteo
-        $lat = -23.5505;  // Latitude de São Paulo
-        $long = -46.6333; // Longitude de São Paulo
-        $climaatualizado = false;
+    return ["success" => false, "message" => "❌ Nenhum servidor de horário respondeu corretamente."];
+}
 
-        $url = "https://api.open-meteo.com/v1/forecast?latitude={$lat}&longitude={$long}&hourly=temperature_2m,precipitation,cloudcover&current_weather=true&timezone=America%2FSao_Paulo";
+function atualizaClimaTempo($lat, $long) {
+    global $configFile, $dados, $location;
 
-        $response = @file_get_contents($url);
+    $url = "https://api.open-meteo.com/v1/forecast?latitude={$lat}&longitude={$long}&hourly=temperature_2m,precipitation,cloudcover&current_weather=true&timezone=" . urlencode($location);
 
-        if ($response !== false) {
-            $dadosClima = json_decode($response, true);
-            if ($dadosClima && isset($dadosClima['current_weather'])) {
-                $climaAtual = $dadosClima['current_weather'];
-                $i = array_search($climaAtual['time'], $dadosClima['hourly']['time']);
+    $response = @file_get_contents($url);
+    if ($response === false) {
+        return ["success" => false, "message" => "❌ Erro ao acessar servidor de clima."];
+    }
 
-                $ceuatual        = $dadosClima['hourly']['cloudcover'][$i] ?? null;
-                $temperaturaatual = $climaAtual['temperature'] ?? null;
-                $chuvaatual      = $dadosClima['hourly']['precipitation'][$i] ?? null;
-                $atualizaclima   = formatarDataHora($climaAtual['time']) ?? null;
+    $dadosClima = json_decode($response, true);
+    if (!$dadosClima || !isset($dadosClima['current_weather'])) {
+        return ["success" => false, "message" => "❌ Dados de clima inválidos."];
+    }
 
-                // Lê o arquivo JSON atual
-                $conteudo = file_exists($configFile) ? json_decode(file_get_contents($configFile), true) : [];
+    $climaAtual = $dadosClima['current_weather'];
+    $i = array_search($climaAtual['time'], $dadosClima['hourly']['time']);
 
-                $conteudo["siteconfig"]["nebulosidadeatual"]        = $ceuatual;
-                $conteudo["siteconfig"]["temperaturaatual"]         = $temperaturaatual;
-                $conteudo["siteconfig"]["chuvaatual"]               = $chuvaatual;
-                $conteudo["siteconfig"]["atualizaclima"]            = $atualizaclima;
+    $ceuatual         = $dadosClima['hourly']['cloudcover'][$i] ?? null;
+    $temperaturaatual = $climaAtual['temperature'] ?? null;
+    $chuvaatual       = $dadosClima['hourly']['precipitation'][$i] ?? null;
+    $atualizaclima    = formatarDataHora($climaAtual['time']) ?? null;
 
-                if (file_put_contents($configFile, json_encode($conteudo, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES))) {
-                    // Lê novamente o arquivo atualizado para refletir na página imediatamente
-                    $dados = json_decode(file_get_contents($configFile), true);
-                    $mensagem = "✔ Clima atualizado com sucesso!";
-                    $climaatualizado = true;
-                } else {
-                    $mensagem = "❌ Erro ao gravar os dados de clima no JSON.";
-                }
-            }
-        }
+    $dados["siteconfig"]["nebulosidadeatual"] = $ceuatual;
+    $dados["siteconfig"]["temperaturaatual"] = $temperaturaatual;
+    $dados["siteconfig"]["chuvaatual"] = $chuvaatual;
+    $dados["siteconfig"]["atualizaclima"] = $atualizaclima;
 
-        if (!$climaatualizado && empty($mensagem)) {
-            $mensagem = "❌ Não foi possível obter os dados do clima.";
-        }
-
+    if (file_put_contents($configFile, json_encode($dados, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES))) {
+        $dados = json_decode(file_get_contents($configFile), true); // recarrega dados
+        return ["success" => true, "message" => "✔ Clima atualizado com sucesso!"];
+    } else {
+        return ["success" => false, "message" => "❌ Erro ao gravar os dados de clima."];
     }
 }
 
+// =========================================================
+// Quando o botão unificado for clicado
+// =========================================================
+if (isset($_POST["atualizar_horario_clima"])) {
+    $res1 = atualizaDataHora($location);
+    $mensagem = $res1["message"];
+
+    if ($res1["success"]) {
+        $res2 = atualizaClimaTempo($lat, $long);
+        $mensagem .= "<br>" . $res2["message"];
+    }
+}
+
+// =========================================================
+// Funções auxiliares
+// =========================================================
 function formatarDataHora($dataHoraISO) {
     $dt = DateTime::createFromFormat('Y-m-d\TH:i', $dataHoraISO);
     return $dt ? $dt->format('Ymd\THis') : null;
 }
 
-// Salvar configurações
+function formatarData($datetimeStr) {
+    if (empty($datetimeStr)) return '';
+    $dt = DateTime::createFromFormat('Ymd\THis', $datetimeStr);
+    return $dt ? $dt->format('d/m/Y H:i:s') : $datetimeStr;
+}
+
+// =========================================================
+// Salvar Configurações (mantido igual)
+// =========================================================
 if (isset($_POST["salvar_config"])) {
     $campos = [
         "sitename","siteslogan","sitelogo","sitecategory","sitetype","pagetype",
@@ -160,13 +180,8 @@ if (isset($_POST["salvar_config"])) {
         $mensagem = "❌ Erro ao salvar configurações.";
     }
 }
-
-function formatarData($datetimeStr) {
-    if (empty($datetimeStr)) return '';
-    $dt = DateTime::createFromFormat('Ymd\THis', $datetimeStr);
-    return $dt ? $dt->format('d/m/Y H:i:s') : $datetimeStr;
-}
 ?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
