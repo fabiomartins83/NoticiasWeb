@@ -9,12 +9,59 @@ function obterDadosConfig($file, $campo) {
     return $dados["siteconfig"][$campo] ?? null;
 }
 
-function calculaNebulosidade($indice) {
-    if ($indice > 75) return "Nublado";
-    else if ($indice > 50) return "Parcialmente nublado";
-    else if ($indice > 25) return "Parcialmente ensolarado";
-    else if ($indice != null) return "Ensolarado";
-    else if ($indice == null) return "Erro na verificação de nebulosidade";
+function calculaNebulosidade($nebul, $pluv, $horario) {
+    if (intval($horario) < 600 || intval($horario) >= 1800) {
+        //noite
+        if ($pluv != 0) {
+            if ($nebul > 50) {
+                return "chuvoso à noite";
+            } else if ($nebul > 10) {
+                return "chuvas esparsas à noite";
+            } else if ($nebul <= 10) {
+                return "algumas nuvens à noite";
+            } else if ($nebul == 0) {
+                return "céu limpo à noite";
+            }
+        } else if ($pluv == 0) {
+            if ($nebul > 90) {
+                return "nublado à noite";
+            } else if ($nebul > 50) {
+                return "parcialmente nublado à noite";
+            } else if ($nebul > 10) {
+                return "algumas nuvens à noite";
+            } else if ($nebul <= 10) {
+                return "céu limpo à noite";
+            } else {
+                return "";
+            }
+        } else return "";
+        //dia
+        if ($pluv == 0) {
+            if ($nebul > 90) {
+                return "nublado";
+            } else if ($nebul > 70) {
+                return "parcialmente nublado";
+            } else if ($nebul > 50) {
+                return "sol entre nuvens";
+            } else if ($nebul > 30) {
+                return "algumas nuvens";
+            } else if ($nebul > 10) {
+                return "parcialmente ensolarado";
+            } else if ($nebul <= 10) {
+                return "ensolarado";
+            } else {
+                return "";
+            }
+        } else if ($pluv > 0) {
+            if ($nebul >= 50) {
+                return "chuvoso";
+            } else if ($nebul < 50) {
+                return "sol e chuvas esparsas";
+            } else {
+                return ""; 
+            }
+        } else return "";
+    }
 }
 
 function formatarDataExtenso($datetimeStr) {
@@ -57,9 +104,9 @@ $colunas = obterDadosConfig($configFile, 'colunas') ?? 4;
 $datetimeConfig = obterDadosConfig($configFile, 'datetime');
 $dataExtenso = formatarDataExtenso($datetimeConfig);
 $temperatura = obterDadosConfig($configFile, 'temperaturaatual') ?? null;
-$nebulosidade = calculaNebulosidade(obterDadosConfig($configFile, 'nebulosidadeatual') ?? null);
+$pluviosidade = obterDadosConfig($configFile, 'chuvaatual') ?? null;
 $horarioclima = substr(obterDadosConfig($configFile, 'atualizaclima'), 9, 4);
-$horarioclima = substr($horarioclima, 0, 2) . "h" . substr($horarioclima, 2, 2);
+$nebulosidade = calculaNebulosidade(obterDadosConfig($configFile, 'nebulosidadeatual'), $pluviosidade, $horarioclima);
 $titulo = obterDadosConfig($configFile, 'sitename');
 $slogan = obterDadosConfig($configFile, 'siteslogan');
 $owner = obterDadosConfig($configFile, 'siteowner');
@@ -187,6 +234,35 @@ footer {
     font-size:0.85em;
     color:#333;
 }
+.cabecalho {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    margin-top: 10px;
+    font-weight: normal;
+    text-height: 1;
+    font-size: 0.95em;
+    text-align: center;
+    width: 100%;
+}
+
+.cabecalho-item {
+    flex: 1;
+}
+
+.cab-left {
+    text-align: left;
+}
+
+.cab-center {
+    text-align: center;
+/*    font-weight: bold;*/
+}
+
+.cab-right {
+    text-align: right;
+}
 .skeleton {
     border: none;
     padding:5px;
@@ -213,11 +289,21 @@ footer {
     <header class="text-center">
         <h1 id="tituloprincipal"><?= htmlspecialchars($titulo) ?></h1>
         <h4 class="slogan"><?= htmlspecialchars($slogan) ?></h4>
-        <h6 class="cabecalho">São Paulo: <?= htmlspecialchars($temperatura) ?> °C às <?= htmlspecialchars($horarioclima) ?>. <br><?= htmlspecialchars($dataExtenso) ?>. <br><?= htmlspecialchars($anonumero) ?></h6>
+        <div class="cabecalho">
+            <div class="cabecalho-item cab-left">
+                <?php if ($temperatura): ?>São Paulo: <?php if (!empty($nebulosidade)) echo htmlspecialchars($nebulosidade) . ', '; ?><?= htmlspecialchars($temperatura) ?> °C às <?= htmlspecialchars(substr($horarioclima, 0, 2) . "h" . substr($horarioclima, 2, 2)) ?>. <?php endif; ?>
+            </div>
+            <div class="cabecalho-item cab-center">
+                <?= htmlspecialchars($dataExtenso) ?>.
+            </div>
+            <div class="cabecalho-item cab-right">
+                <?= htmlspecialchars($anonumero) ?>
+            </div>
+        </div>
         <hr>
     </header>
 
-    <div id="container-colunas" class="container-colunas"></div>
+    <div id="container-conteudo" class="container-colunas"></div>
 
     <footer>
         <p style="line-height: 1;"><small><b><?= htmlspecialchars($titulo) ?></b> — Desenvolvido por <?= htmlspecialchars($developer) ?><br><?= htmlspecialchars($direitos) ?></small></p>
@@ -226,7 +312,7 @@ footer {
 
 <script>
 document.addEventListener("DOMContentLoaded", async () => {
-    const container = document.getElementById("container-colunas");
+    const container = document.getElementById("container-conteudo");
     const numColunas = <?= (int)$colunas ?>;
     const gapPercent = 2;
     const cardWidth = (100 - (numColunas - 1) * gapPercent) / numColunas;
@@ -316,17 +402,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         container.innerHTML = "";
 
         // chame com filtro se quiser, ex: extrairConteudo("conteudo.json", "editoria", "politica")
-        const resultado = await extrairConteudo("conteudo.json",);
+        const resultado = await extrairConteudo("conteudo.json");
         conteudoJSON = resultado;
 
         if (conteudoJSON.length === 0) {
-            container.innerHTML = "<em>Nenhuma reportagem encontrada.</em>";
+            container.innerHTML = "<p>Nenhum conteúdo disponível.</p>";
             return;
         }
 
-        const fragment = document.createDocumentFragment();
-        let linha = document.createElement("div");
-        linha.classList.add("linha-cards");
+        // cria um DocumentFragment, um nó temporário em memória, usado para construir vários elementos off-DOM e inserí-los de uma única vez
+        const fragment = document.createDocumentFragment(); 
+        let linha = document.createElement("div"); // cria uma div para armazenar as linhas
+        linha.classList.add("linha-cards"); // atribui à div criada a classe 'linha-cards', que irá configurá-la
 
         let countVisible = 0;
         conteudoJSON.forEach((item) => {
