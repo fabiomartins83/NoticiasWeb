@@ -452,11 +452,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Skeletons de carregamento
         container.innerHTML = "";
         for (let i = 0; i < numColunas * 2; i++) {
-            const s = document.createElement("div");
-            s.classList.add("skeleton");
-            s.style.flex = `0 0 ${(100 - (numColunas - 1) * gapPercent) / numColunas}%`;
-            s.style.padding = cardPadding; // aplica padding também nos skeletons
-            container.appendChild(s);
+            const skeleton = document.createElement("div");
+            skeleton.classList.add("skeleton");
+            // s.style.flex = `0 0 ${(100 - (numColunas - 1) * gapPercent) / numColunas}%`;
+            skeleton.style.gap = `${gapPercent}%`;
+            skeleton.classList.add("linha-cards");
+            skeleton.style.padding = cardPadding; 
+            container.appendChild(skeleton);
         }
 
         try {
