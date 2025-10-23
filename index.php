@@ -312,20 +312,11 @@ footer {
 
 <script>
 document.addEventListener("DOMContentLoaded", async () => {
-    const container = document.getElementById("container-conteudo");
     const numColunas = <?= (int)$colunas ?>;
     const gapPercent = 2;
     const cardWidth = (100 - (numColunas - 1) * gapPercent) / numColunas;
-    let conteudoJSON = [];
 
-    // skeletons
-    for (let i = 0; i < numColunas * 2; i++) {
-        const s = document.createElement("div");
-        s.classList.add("skeleton");
-        s.style.flex = `0 0 ${cardWidth}%`;
-        container.appendChild(s);
-    }
-
+    // Função para criar o HTML de cada card
     function criarCard(item) {
         if (!item || !item.title) return null;
         const card = document.createElement("div");
@@ -359,7 +350,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             </div>`;
 
         card.style.flex = `0 0 ${cardWidth}%`;
-
         if (item.cardheight) {
             const altura = parseInt(item.cardheight, 10);
             if (!isNaN(altura)) card.style.height = `${altura}px`;
@@ -370,16 +360,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         return card;
     }
 
-    // Função que le o arquivo JSON e retorna array filtrado (apenas reportagens)
+    // Função para ler o arquivo JSON
     async function extrairConteudo(arquivo, campo = null, valor = null) {
         try {
             const responseJson = await fetch(arquivo);
             if (!responseJson.ok) throw new Error("Falha ao carregar conteúdo JSON.");
 
             const data = await responseJson.json();
-            let conteudoArquivo = Object.values(data.conteudo || {}).filter(i => i && i.type === "reportagem" && i.hidden === false && i.archive === false);
+            let conteudoArquivo = Object.values(data.conteudo || {}).filter(
+                i => i && i.type === "reportagem" && i.hidden === false && i.archive === false
+            );
 
-            // filtro opcional por campo/valor (cuidado com case sensitivity)
+            // filtro opcional por campo/valor
             if (campo && valor !== null) {
                 const vLower = (typeof valor === "string") ? valor.toLowerCase() : valor;
                 conteudoArquivo = conteudoArquivo.filter(item => {
@@ -389,53 +381,69 @@ document.addEventListener("DOMContentLoaded", async () => {
                 });
             }
 
-            return conteudoArquivo; // <-- retorno correto agora
-
+            return conteudoArquivo;
         } catch (err) {
             console.error("Erro ao extrair conteúdo:", err);
             return [];
         }
     }
 
-    // --- uso da função: monta os cards (mantendo lógica original) ---
-    try {
-        container.innerHTML = "";
-
-        // chame com filtro se quiser, ex: extrairConteudo("conteudo.json", "editoria", "politica")
-        const resultado = await extrairConteudo("conteudo.json");
-        conteudoJSON = resultado;
-
-        if (conteudoJSON.length === 0) {
-            container.innerHTML = "<p>Nenhum conteúdo disponível.</p>";
+    // 🧩 NOVA FUNÇÃO: monta as linhas e cards dinamicamente
+    async function preencherConteudo(containerId, arquivo, campo = null, valor = null) {
+        const container = document.getElementById(containerId);
+        if (!container) {
+            console.error(`Container "${containerId}" não encontrado.`);
             return;
         }
 
-        // cria um DocumentFragment, um nó temporário em memória, usado para construir vários elementos off-DOM e inserí-los de uma única vez
-        const fragment = document.createDocumentFragment(); 
-        let linha = document.createElement("div"); // cria uma div para armazenar as linhas
-        linha.classList.add("linha-cards"); // atribui à div criada a classe 'linha-cards', que irá configurá-la
+        // skeletons de carregamento
+        container.innerHTML = "";
+        for (let i = 0; i < numColunas * 2; i++) {
+            const s = document.createElement("div");
+            s.classList.add("skeleton");
+            s.style.flex = `0 0 ${(100 - (numColunas - 1) * 2) / numColunas}%`;
+            container.appendChild(s);
+        }
 
-        let countVisible = 0;
-        conteudoJSON.forEach((item) => {
-            const card = criarCard(item);
-            if (card) linha.appendChild(card);
+        try {
+            const conteudoJSON = await extrairConteudo(arquivo, campo, valor);
+            container.innerHTML = "";
 
-            countVisible++;
-            if (countVisible % numColunas === 0) {
-                fragment.appendChild(linha);
-                linha = document.createElement("div");
-                linha.classList.add("linha-cards");
+            if (conteudoJSON.length === 0) {
+                container.innerHTML = "<p>Nenhum conteúdo disponível.</p>";
+                return;
             }
-        });
 
-        if (linha.childNodes.length > 0) fragment.appendChild(linha);
-        container.appendChild(fragment);
+            const fragment = document.createDocumentFragment();
+            let linha = document.createElement("div");
+            linha.classList.add("linha-cards");
 
-    } catch (err) {
-        console.error(err);
-        container.innerHTML = "<em>Erro ao carregar o conteúdo.</em>";
+            let countVisible = 0;
+            conteudoJSON.forEach((item) => {
+                const card = criarCard(item);
+                if (card) linha.appendChild(card);
+
+                countVisible++;
+                if (countVisible % numColunas === 0) {
+                    fragment.appendChild(linha);
+                    linha = document.createElement("div");
+                    linha.classList.add("linha-cards");
+                }
+            });
+
+            if (linha.childNodes.length > 0) fragment.appendChild(linha);
+            container.appendChild(fragment);
+
+        } catch (err) {
+            console.error(err);
+            container.innerHTML = "<em>Erro ao carregar o conteúdo.</em>";
+        }
     }
+
+    // --- Chamada prática (substitui o código antigo direto) ---
+    preencherConteudo("container-conteudo", "conteudo.json", "type", "reportagem");
 });
 </script>
+
 </body>
 </html>
