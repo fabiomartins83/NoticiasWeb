@@ -249,7 +249,7 @@ if (!empty($anonumero)) $anonumero .= ". ";
         font-weight:bold;
         text-align:center;
         line-height: 1;
-        margin: 12px 0;
+        margin: 5px 0 15px;
         word-break: break-word;
         text-decoration:none !important;
         color:#000 !important;
@@ -266,7 +266,7 @@ if (!empty($anonumero)) $anonumero .= ". ";
         font-size:0.75em;
         text-align:right;
         color:inherit;
-        margin:0;
+        margin: 0;
         line-height: 1;
     }
     footer {
@@ -410,7 +410,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const dataPubl = item.datetime ? new Date(item.datetime).toLocaleDateString("pt-BR") : "";
 
         card.innerHTML = `
-            ${item.chapeu ? `<div class="direita" style="font-size:0.8em;font-weight:bold;text-transform:uppercase;margin: 0 0 6px;">${item.chapeu}</div>` : ""}
+            ${item.chapeu ? `<div class="direita" style="font-size:0.8em;font-weight:bold;text-transform:uppercase;margin: 0 10px 10px;">${item.chapeu}</div>` : ""}
             ${imgHTML}
             <div class="card-title">
                 <a href="${item.url || '#'}" class="hover" target="_blank" rel="noopener noreferrer">${item.title}</a>
