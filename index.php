@@ -14,7 +14,7 @@ function calculaNebulosidade($nebul, $pluv, $horario) {
         //noite
         if ($pluv != 0) {
             if ($nebul > 50) {
-                return "chuvoso à noite";
+                return "chuva à noite";
             } else if ($nebul > 10) {
                 return "chuvas esparsas à noite";
             } else if ($nebul <= 10) {
@@ -41,17 +41,17 @@ function calculaNebulosidade($nebul, $pluv, $horario) {
         //dia
         if ($pluv == 0) {
             if ($nebul > 90) {
-                return "nublado";
+                return "céu nublado";
             } else if ($nebul > 70) {
-                return "parcialmente nublado";
+                return "céu parcialmente nublado";
             } else if ($nebul > 50) {
                 return "sol entre nuvens";
             } else if ($nebul > 30) {
-                return "algumas nuvens";
+                return "sol com algumas nuvens";
             } else if ($nebul > 10) {
-                return "parcialmente ensolarado";
+                return "dia parcialmente ensolarado";
             } else if ($nebul <= 10) {
-                return "ensolarado";
+                return "dia ensolarado";
             } else {
                 return "erro de nebulosidade";
             }
@@ -344,14 +344,14 @@ if (!empty($anonumero)) $anonumero .= ". ";
 <body>
 <main class="container-main">
     <header class="text-center">
-        <h1 id="tituloprincipal"><a href=""> <?= htmlspecialchars($titulo) ?> </a></h1>
+        <h1 id="tituloprincipal"><a href=""> <?= ucfirst(htmlspecialchars($titulo)) ?> </a></h1>
         <h4 class="slogan"><?= htmlspecialchars($slogan) ?></h4>
         <div class="cabecalho">
             <div class="cabecalho-item cab-left">
                 <?= htmlspecialchars($dataExtenso) ?>.
             </div>
             <div class="cabecalho-item cab-center">
-                <span class="letreiro"><?php if ($temperatura): ?>São Paulo: <?php if (!empty($nebulosidade)) echo htmlspecialchars($nebulosidade) . ', '; ?><?= htmlspecialchars($temperatura) ?> °C às <?= htmlspecialchars(substr($horarioclima, 0, 2) . "h" . substr($horarioclima, 2, 2)) ?>. <?php endif; ?> </span>
+                <span class="letreiro"><?php if ($temperatura): ?>São Paulo: <?php if (!empty($nebulosidade)) echo htmlspecialchars(ucfirst($nebulosidade)) . ', '; ?><?= htmlspecialchars($temperatura) ?> °C às <?= htmlspecialchars(substr($horarioclima, 0, 2) . "h" . substr($horarioclima, 2, 2)) ?>. <?php endif; ?> </span>
             </div>
             <div class="cabecalho-item cab-right">
                 <?= htmlspecialchars($anonumero) ?>

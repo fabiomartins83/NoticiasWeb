@@ -10,7 +10,7 @@ try:
     REPORTLAB_INSTALLED = True
 except ModuleNotFoundError:
     REPORTLAB_INSTALLED = False
-    print("⚠️ Biblioteca reportlab não instalada. Execute o comando 'pip install reportlab'.")
+    print("⚠️ Biblioteca 'reportlab' não instalada. Execute o comando 'pip install reportlab'.")
 
 DB_FILE = "conteudo.db"
 JSON_FILE = "conteudo.json"
@@ -246,14 +246,14 @@ def editar_materia():
         temp = temp[70:]
     print("\n" + "-" * 70 + "\n")
 
-    novo_titulo = input("\nNovo título (pressione Enter para manter): ").strip() or titulo
-    novo_autor = input("Novo autor (pressione Enter para manter): ").strip() or autor
+    novo_titulo = input("\nNovo título (pressione Enter para manter): ").strip().capitalize() or titulo
+    novo_autor = input("Novo autor (pressione Enter para manter): ").strip().capitalize() or autor
     novo_publishdate = input("Nova data de publicação (YYYY-mm-ddThh:mm:ss, Enter para manter): ").strip() or publish_raw
-    novo_conteudo = input("Novo conteúdo (pressione Enter para manter): ").strip() or conteudo
+    novo_conteudo = input("Novo conteúdo (pressione Enter para manter): ").strip().capitalize() or conteudo
     nova_imagem = input("Nova imagem principal (pressione Enter para manter): ").strip() or imagem
-    nova_legenda = input('Nova legenda da imagem principal (pressione Enter para manter): ') or imgrights
-    nova_editoria = input("Nova editoria (pressione Enter para manter): ").strip() or editoria
-    novo_chapeu = input("Novo chapéu da reportagem (pressione Enter para manter): ").strip() or chapeu
+    nova_legenda = input('Nova legenda da imagem principal (pressione Enter para manter): ').strip().capitalize() or imgrights
+    nova_editoria = input("Nova editoria (pressione Enter para manter): ").strip().capitalize() or editoria
+    novo_chapeu = input("Novo chapéu da reportagem (pressione Enter para manter): ").strip().capitalize() or chapeu
 
     with conectar() as conn:
         cursor = conn.cursor()
