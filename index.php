@@ -21,6 +21,8 @@ function calculaNebulosidade($nebul, $pluv, $horario) {
                 return "algumas nuvens à noite";
             } else if ($nebul == 0) {
                 return "céu limpo à noite";
+            } else {
+                return "erro de nebulosidade";
             }
         } else if ($pluv == 0) {
             if ($nebul > 90) {
@@ -32,9 +34,10 @@ function calculaNebulosidade($nebul, $pluv, $horario) {
             } else if ($nebul <= 10) {
                 return "céu limpo à noite";
             } else {
-                return "";
+                return "erro de nebulosidade";
             }
         } else return "";
+    } else if (intval($horario) > 600 && intval($horario) < 1800) {
         //dia
         if ($pluv == 0) {
             if ($nebul > 90) {
@@ -50,7 +53,7 @@ function calculaNebulosidade($nebul, $pluv, $horario) {
             } else if ($nebul <= 10) {
                 return "ensolarado";
             } else {
-                return "";
+                return "erro de nebulosidade";
             }
         } else if ($pluv > 0) {
             if ($nebul >= 50) {
@@ -58,9 +61,9 @@ function calculaNebulosidade($nebul, $pluv, $horario) {
             } else if ($nebul < 50) {
                 return "sol e chuvas esparsas";
             } else {
-                return ""; 
+                return "erro de nebulosidade"; 
             }
-        } else return "";
+        } else return "erro de pluviosidade.";
     }
 }
 
