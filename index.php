@@ -303,7 +303,7 @@ footer {
         <hr>
     </header>
 
-    <div id="container-conteudo" class="container-colunas"></div>
+    <div id="container-conteudo-01" class="container-colunas"></div>
 
     <footer>
         <p style="line-height: 1;"><small><b><?= htmlspecialchars($titulo) ?></b> — Desenvolvido por <?= htmlspecialchars($developer) ?><br><?= htmlspecialchars($direitos) ?></small></p>
@@ -393,6 +393,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         const container = document.getElementById(containerId);
         if (!container) {
             console.error(`Container "${containerId}" não encontrado.`);
+            // Exibe mensagem na página
+            document.body.innerHTML += `<p><em>Erro ao carregar o conteúdo.</em></p>`;
             return;
         }
 
@@ -441,7 +443,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // --- Chamada prática (substitui o código antigo direto) ---
-    preencherConteudo("container-conteudo", "conteudo.json", "type", "reportagem");
+    preencherConteudo("container-conteudo-01", "conteudo.json", "type", "reportagem");
 });
 </script>
 
