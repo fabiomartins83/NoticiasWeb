@@ -1,6 +1,45 @@
 {
     "conteudo": [
         {
+            "id": 3,
+            "date": "2025-10-24T16:28:01",
+            "name": null,
+            "type": "reportagem",
+            "publishdate": "2025-10-24T16:28:01",
+            "title": "Ldu amassa em 45min e palmeiras se complica por vaga na final da libertadores",
+            "content": "A ldu venceu o palmeiras por 3 a 0, na noite de hoje, no estádio rodrigo paz delgado, em quito, e complicou a vida da equipe de abel ferreira pelo sonho da vaga na final da copa libertadores. gabriel villamíl (2) e azulgaray, em cobrança de pênalti, marcaram os gols da equipe equatoriana. os três gols foram marcados ainda no 1º tempo, quando o time comandado por tiago nunes teve uma grande superioridade na partida.",
+            "linhafina": "Alviverde teve uma das piores atuações na temporada. O primeiro tempo foi de domínio total da LDU, e na etapa final, com os equatorianos em ritmo mais baixo, pouca coisa mudou.",
+            "abstract": null,
+            "path": "",
+            "url": "https://www.uol.com.br/esporte/futebol/ultimas-noticias/2025/10/23/ldu-x-palmeiras-libertadores-semifinal-ida.htm",
+            "image": "https://conteudo.imguol.com.br/c/esporte/46/2025/10/23/villamil-a-direita-celebra-gol-em-ldu-x-palmeiras-jogo-da-libertadores-1761268869400_v2_450x450.jpg.webp",
+            "chapeu": "PALMEIRAS x LDU",
+            "category": "geral",
+            "editoria": "Esportes",
+            "tema": null,
+            "destaque": null,
+            "imgrights": "Foto: Divulgação/CONMEBOL Libertadores",
+            "imgdescript": null,
+            "author": "Flavio Latif",
+            "location": "São Paulo",
+            "cortexto": "black",
+            "corfundo": "standard",
+            "fontetexto": null,
+            "entrelinhas": "standard",
+            "margin": "standard",
+            "padding": "standard",
+            "textalign": null,
+            "paragrafo": 0,
+            "comentarios": null,
+            "cardheight": null,
+            "cardwidth": null,
+            "usrviews": null,
+            "maislidas": null,
+            "important": 0,
+            "archive": 0,
+            "hidden": 0
+        },
+        {
             "id": 2,
             "date": "2025-10-22T03:21:26",
             "name": null,
@@ -31,13 +70,13 @@
             "textalign": null,
             "paragrafo": 0,
             "comentarios": null,
-            "cardheigth": 50,
+            "cardheight": null,
             "cardwidth": null,
             "usrviews": null,
             "maislidas": null,
-            "important": null,
-            "archive": false,
-            "hidden": false
+            "important": 0,
+            "archive": 0,
+            "hidden": 0
         },
         {
             "id": 1,
@@ -70,13 +109,13 @@
             "textalign": null,
             "paragrafo": 0,
             "comentarios": null,
-            "cardheigth": 80,
+            "cardheight": null,
             "cardwidth": null,
             "usrviews": null,
             "maislidas": null,
-            "important": null,
-            "archive": false,
-            "hidden": false
+            "important": 0,
+            "archive": 0,
+            "hidden": 0
         }
     ]
 }
