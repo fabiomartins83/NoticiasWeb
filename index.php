@@ -439,7 +439,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             const data = await responseJson.json();
             let conteudoArquivo = Object.values(data.conteudo || {}).filter(
-                i => i && i.type === "reportagem" && i.hidden === false && i.archive === false
+                i =>
+                    i &&
+                    i.type === "reportagem" &&
+                    (i.hidden === 0 || i.hidden === false || i.hidden === null || i.hidden === undefined) &&
+                    (i.archive === 0 || i.archive === false || i.archive === null || i.archive === undefined)
             );
 
             if (campo && valor !== null) {
