@@ -343,6 +343,7 @@ h4.slogan {
     font-weight: bold;
     margin: 0 0 10px;
     line-height: 1.2;
+    text-align: start;
 }
 .card-title a {
     color: #111;
@@ -363,8 +364,8 @@ h4.slogan {
 .card-content p {
     margin: 15px 0;
     color: #222;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
+    word-wrap: normal;
+    overflow-wrap: normal;
     /* Habilita a hifenização automática */
     hyphens: auto;
     -webkit-hyphens: auto;
@@ -530,7 +531,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     </a>
                 </div>
                 ${dataPubl ? `<p class="card-data">${dataPubl}</p>` : ""}
-                <div class="card-content hyphenate">
+                <div class="card-content">
                     ${item.location ? `<b>${item.location.toUpperCase()} - </b>` : ""}
                     ${item.content || ""}
                     ${item.url ? ` <a href="${item.url}" class="link" target="_blank" rel="noopener noreferrer">Leia mais</a>` : ""}
