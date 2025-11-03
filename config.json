@@ -1,7 +1,7 @@
 {
     "siteconfig": {
         "sitename": "Gazeta de Not\u00edcias",
-        "siteslogan": "A informa\u00e7\u00e3o de que voc\u00ea precisa",
+        "siteslogan": "A informa\u00e7\u00e3o que voc\u00ea precisa",
         "sitelogo": "img/logo1.png",
         "sitecategory": "News Portal",
         "sitetype": "",
@@ -12,9 +12,10 @@
         "siteemail": "fabiomartins01@gmail.com",
         "cpfcnpj": "",
         "colunas": "4",
-        "gappercent": "2",
+        "gappercent": "0",
         "cardheight": "",
-        "cardpadding": "10px",
+        "cardpadding": "5px",
+        "posicaoimagem": "sup",
         "favfonttype": "",
         "ano": "1",
         "numero": "1",

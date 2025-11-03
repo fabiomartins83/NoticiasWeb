@@ -5,3 +5,5 @@
 /backup/
 .gitignore
 *.zip
+*.txt
+antigo*

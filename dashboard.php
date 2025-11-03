@@ -31,6 +31,7 @@ $defaultConfig = [
         "gappercent" => "2",
         "cardheight" => "",
         "cardpadding" => "5px",
+        "posicaoimagem" => "sup",
         "favfonttype" => "",
         "ano" => "I",
         "numero" => "1",
@@ -169,7 +170,8 @@ if (isset($_POST["salvar_config"])) {
     $campos = [
         "sitename","siteslogan","sitelogo","sitecategory","sitetype","pagetype",
         "sitecopyright","siteowner","sitedeveloper","siteemail","cpfcnpj",
-        "colunas","gappercent","cardheight","cardpadding","favfonttype","ano","numero","edicao"
+        "colunas","gappercent","cardheight","cardpadding","posicaoimagem","favfonttype",
+        "ano","numero","edicao"
     ];
 
     foreach ($campos as $campo) {
@@ -190,7 +192,7 @@ if (isset($_POST["salvar_config"])) {
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Painel de Controle</title>
+<title>Dashboard</title>
 <style>
 body {
     font-family: Arial, sans-serif;
@@ -262,7 +264,7 @@ button:hover { background: #0056b3; }
 </style>
 </head>
 <body>
-<h1>Painel de Controle</h1>
+<h1>Dashboard do site</h1>
 
 <!-- Coluna 1 -->
 <form class="column" method="post">
@@ -308,6 +310,13 @@ button:hover { background: #0056b3; }
         <?php for ($i=1;$i<=10;$i++): ?>
         <option value="<?= $i ?>" <?= ($dados['siteconfig']['colunas']==$i?'selected':'') ?>><?= $i ?></option>
         <?php endfor; ?>
+    </select>
+
+    <label>Posição da imagem:</label>
+    <select name="posicaoimagem">
+        <option value="sup" <?= ($dados['siteconfig']['posicaoimagem'] == 'sup' ? 'selected' : '') ?>>Superior</option>
+        <option value="esq" <?= ($dados['siteconfig']['posicaoimagem'] == 'esq' ? 'selected' : '') ?>>Esquerda</option>
+        <option value="dir" <?= ($dados['siteconfig']['posicaoimagem'] == 'dir' ? 'selected' : '') ?>>Direita</option>
     </select>
 
     <label>Medianiz ou margem entre os cards (%):</label>

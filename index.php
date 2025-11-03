@@ -143,207 +143,291 @@ if (!empty($anonumero)) $anonumero .= ". ";
     <script src="./js/JQuery3-min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <style> /* --- CSS incorporado (jornalweb.css) --- */
-    *, html, main { margin:0; padding:0; box-sizing:border-box; }
-    body {
-        margin: 0 5%;
-        font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
-        background-color: #F5F5F5; /* antigo #EEE */
-        color: #222; /* antigo #000 */
-        line-height: 1;
-    }
-    h1,h2,h3,h4,h5,h6 { margin:0; }
-    a, a:hover { color: #000; text-decoration:none; }
-    a.link {
-        color: #00D;
-        text-decoration: none; 
-        font-weight: bold;}
-    a.hover:hover { 
-        text-decoration:underline; 
-        font-weight:bold; }
-    main { width:100%; }
-    h1#tituloprincipal {
-        font-family: Garamond, 'Times New Roman', serif;
-        font-size: 4.5em;
-        text-align:center;
-        margin:5px 0;
-        line-height: 1;
-    }
-    h4.slogan {
-        text-align:center;
-        margin-bottom:20px;
-        line-height: 1;
-    }
-    h6.cabecalho {
-        text-align: right;
-        font-weight:normal;
-        line-height: 1;
-    }
-    .container-colunas {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 2%;
-        margin: 0;              /* remove deslocamento lateral */
-        padding: 0;             /* garante alinhamento */
-        width: 100%;
-    }
+/* ===========================
+   VARIÁVEIS GLOBAIS
+   =========================== */
+:root {
+    --gap: 2%;
+}
 
-    .linha-cards {
-        display: flex;
-        flex-wrap: nowrap;
-        gap: 2%;
-        justify-content: flex-start;
-        align-items: stretch;
-        width: 100%;
-        margin: 0 auto;         /* centraliza se o container tiver max-width */
-        padding: 0;             /* zera qualquer recuo */
-    }
-    .card {
-        background-color: #ffffff;
-        color: #222222;
-        border-radius: 5px;
-        margin: 0;
-        overflow: hidden;
-        width: 100%;
-        border: none;
-        /* transition: transform 0.2s ease, box-shadow 0.2s ease;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1); */
-    }
+/* ===========================
+   RESET E BODY
+   =========================== */
+*, html, main { margin:0; padding:0; box-sizing:border-box; }
+body {
+    margin: 0 5%;
+    font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+    background-color: #F5F5F5;
+    color: #222;
+    line-height: 1;
+    font-family: Georgia, 'Times New Roman', serif;
+}
+h1,h2,h3,h4,h5,h6 { margin:0; }
+a, a:hover { color: #000; text-decoration:none; }
+a.link {
+    color: #00D;
+    text-decoration: none; 
+    font-weight: bold;
+}
+a.hover:hover { 
+    text-decoration:underline; 
+    font-weight:bold; 
+}
+main { width:100%; }
+p {margin: 0;}
 
-    /* padding dinâmico com base em data-padding */
-    .card[data-padding] {
-        padding: attr(data-padding px, 16px);
-    }
+/* ===========================
+   FONTES TIPOGRÁFICAS EXTERNAS
+   =========================== */
+@font-face {
+  font-family: "Led Counter"; /* Nome que você usará no CSS */
+  src: url("./fonts/led_counter-7.ttf") format("ttf");
+  font-weight: normal;
+  font-style: normal;
+}
 
-    /* Fallback para navegadores que não suportam attr() */
-    @supports not (padding: attr(data-padding px, 16px)) {
-        .card {
-            padding: 16px; /* valor padrão */
-        }
-    }
-/*
-    .card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 4px 14px rgba(0,0,0,0.15);
-    }
-*/
-    .card h2 {
-        font-size: 1.2rem;
-        margin: 0 0 8px 0;
-        color: #111111;
-    }
+.led-counter {
+    font-family: 'LED Counter 7', monospace;
+}
 
-    .card p {
-        font-size: 0.95rem;
-        line-height: 1.5;
-        margin: 0;
-        color: #333333;
-    }
-    .card-img {
-        width:100%;
-        border-radius:5px;
-        object-fit:cover;
-        aspect-ratio:4/3;
-    }
-    .card-title {
-        font-weight:bold;
-        text-align:center;
-        line-height: 1;
-        margin: 5px 0 15px;
-        word-break: break-word;
-        text-decoration:none !important;
-        color:#000 !important;
-    }
-    .card-content {
-        flex-grow:1;
-        font-size:0.9em;
-        text-align:justify;
-        margin-bottom:10px;
-        font-family:'Georgia','Times New Roman','serif'; 
-        line-height: 1.5;
-    }
-    .img-legenda, .img-descricao {
-        font-size:0.75em;
-        text-align:right;
-        color:inherit;
-        margin: 0;
-        line-height: 1;
-    }
-    footer {
-        text-align:center;
-        margin-top:40px;
-        padding:10px 0;
-        border-top:1px solid #ccc;
-        font-size:0.85em;
-        color: #555;
-    }
-    .cabecalho {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: nowrap;
-        margin-top: 10px;
-        font-weight: normal;
-        line-height: 1;
-        font-size: 0.95em;
-        text-align: center;
-        width: 100%;
-    }
+/* ===========================
+   CABEÇALHO
+   =========================== */
+h1#tituloprincipal {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 4.5em;
+    margin:5px 0;
+    line-height: 1;
+}
+h4.slogan {
+    margin-bottom:20px;
+    line-height: 1;
+}
+.cabecalho {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    margin-top: 10px;
+    font-weight: normal;
+    line-height: 1;
+    font-size: 0.95em;
+    width: 100%;
+}
+.cabecalho-item { flex: 1; }
+.cab-left { text-align: left; }
+.cab-right { text-align: right; }
+.cab-center {
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+    box-sizing: border-box;
+    /* background-color: #333;
+    color: #FF6;
+    font-family: 'LED Counter 7', monospace;
+    font-size: 20px; */
+}
+.cab-center span.letreiro {
+    display: inline-block;
+    padding-left: 100%;
+    animation: scroll-letreiro 20s linear infinite;
+}
+@keyframes scroll-letreiro {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+}
 
-    .cabecalho-item {
-        flex: 1;
-    }
+/* ===========================
+   CONTAINER DE CARDS
+   =========================== */
+.container-colunas { 
+    display: flex; 
+    flex-direction: column; 
+    gap: var(--gap); 
+    width: 100%; 
+    margin: 0; 
+    padding: 0; 
+    font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+}
+.linha-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    width: 100%;
+    gap: var(--gap);
+    margin: calc(var(--gap)/2) 0;
+}
+.container-colunas > .linha-cards:last-child {
+    margin-bottom: 0;
+}
 
-    .cab-left {
-        text-align: left;
-    }
+/* ===========================
+   CARD
+   =========================== */
+.card {
+    display: flex;
+    flex-direction: column; /* garante que os elementos fiquem empilhados */
+    background-color: inherit !important; /* #FFF */
+    border-radius: 5px;
+    /*box-shadow: 0 2px 5px rgba(0,0,0,0.1); */
+    overflow: hidden;
+    padding: 5px;
+    border: none;
+    width: 100%;
+}
+.card[data-padding] { padding: attr(data-padding px, 5px); }
+@supports not (padding: attr(data-padding px, 5px)) {
+    .card { padding: 5px; }
+}
+.card-chapeu {
+    font-size: 0.8em;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    padding: 2px 0;
+}
 
-    .cab-right {
-        text-align: right;
-    }
+/* Imagem */
+.card-imagem {
+    width: 100%;
+    text-align: center;
+    margin: 0 0 15px;
+}
+.card-imagem img {
+    width: 100%;
+    border-radius: 6px;
+    object-fit: cover; /* garante preenchimento sem distorcer */
+    aspect-ratio: 4/3;
+}
+.img-legenda {
+    font-size: 0.75em;
+    color: #555;
+    margin-top: 4px;
+    text-align: center;
+}
 
-    .cab-center {
-        text-align: center;
-        overflow: hidden;       /* oculta o excesso de texto */
-        white-space: nowrap;    /* mantém o texto em uma linha */
-        box-sizing: border-box;
-    }
+/* Corpo horizontal (usado para img à esquerda/direita) */
+.card-corpo {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 15px;
+}
+/* bloco imagem lateral (35%) */
+.card-imagem-lateral {
+    flex: 0 0 35%;
+    max-width: 35%;
+    text-align: left;
+}
+.card-imagem-lateral img {
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+    object-fit: cover;
+    display: block;
+    aspect-ratio: 4/3;
+}
 
-    .cab-center span.letreiro {
-        display: inline-block;
-        padding-left: 100%;    /* espaço inicial fora da tela */
-        animation: scroll-letreiro 12s linear infinite;
-    }
+/* BLOCO DIREITO (TEXTO) */
+.card-texto {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    text-align: left;
+}
+.card-title {
+    font-size: 1.1em;
+    font-weight: bold;
+    margin: 0 0 10px;
+    line-height: 1.2;
+}
+.card-title a {
+    color: #111;
+    text-decoration: none;
+}
+.card-title a:hover { text-decoration: underline; }
+.card-data {
+    font-size: 0.75em;
+    color: #666;
+}
+.card-content {
+    flex-grow: 1;
+    margin-bottom: 10px;
+    font-family:'Georgia','Times New Roman','serif'; 
+    line-height: 1.8;
+    text-align: justify !important;
+}
+.card-content p {
+    margin: 15px 0;
+    color: #222;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    /* Habilita a hifenização automática */
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    -moz-hyphenz: auto;
+    -ms-hyphens: auto;
+}
+.hyphenate {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    /* Habilita a hifenização automática */
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    -moz-hyphenz: auto;
+    -ms-hyphens: auto;
+}
+.card-content a.link {
+    color: #0077cc;
+    text-decoration: none;
+}
+.card-content a.link:hover { text-decoration: underline; }
 
-    @keyframes scroll-letreiro {
-        0%   { transform: translateX(0); }
-        100% { transform: translateX(-100%); }
-    }
+/* RESPONSIVIDADE */
+@media (max-width: 768px) {
+    .card-corpo { flex-direction: column; }
+    .card-imagem { max-width: 100%; flex: none; }
+}
 
-    .skeleton {
-        border: none;
-        padding:5px;
-        display:flex;
-        flex-direction:column;
-        justify-content:space-between;
-        background:#ddd;
-        opacity: 0.5;
-        border-radius:5px;
-        min-height:200px;
-        flex:1;
-        animation:skeleton-loading 1.2s linear infinite alternate;
-    }
-    @keyframes skeleton-loading {
-        0% { background-color:#ddd; }
-        50% { background-color:#ccc; }
-        100% { background-color:#ddd; }
-    }
+/* FOOTER */
+footer {
+    text-align:center;
+    margin-top:40px;
+    padding:10px 0;
+    border-top:1px solid #ccc;
+    font-size:0.85em;
+    color: #555;
+    font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+}
+
+/* CARDS AUXILIARES (SKELETON) */
+.skeleton {
+    border: none;
+    padding:5px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    background:#ddd;
+    opacity: 0.5;
+    border-radius:5px;
+    min-height:200px;
+    flex:1;
+    animation:skeleton-loading 0.8s linear infinite alternate;
+}
+@keyframes skeleton-loading {
+    0% { background-color:#ddd; }
+    50% { background-color:#ccc; }
+    100% { background-color:#ddd; }
+}
     </style>
 </head>
 
 <body>
 <main class="container-main">
-    <header class="text-center">
+    <header class="">
         <h1 id="tituloprincipal"><a href=""> <?= ucfirst(htmlspecialchars($titulo)) ?> </a></h1>
         <h4 class="slogan"><?= htmlspecialchars($slogan) ?></h4>
         <div class="cabecalho">
@@ -351,7 +435,7 @@ if (!empty($anonumero)) $anonumero .= ". ";
                 <?= htmlspecialchars($dataExtenso) ?>.
             </div>
             <div class="cabecalho-item cab-center">
-                <span class="letreiro"><?php if ($temperaturaSp): ?>São Paulo (SP): <?php if (!empty($nebulosidadeSp)) echo htmlspecialchars(ucfirst($nebulosidadeSp)) . ', '; ?><?= htmlspecialchars($temperaturaSp) ?> °C às <?= htmlspecialchars(substr($horarioclimaSp, 0, 2) . "h" . substr($horarioclimaSp, 2, 2)) ?>. <?php endif; ?> </span>
+                <span class="letreiro"><?php if ($temperaturaSp): ?>Previsão do tempo em São Paulo (SP): <?php if (!empty($nebulosidadeSp)) echo htmlspecialchars(ucfirst($nebulosidadeSp)) . ', '; ?><?= htmlspecialchars($temperaturaSp) ?> °C às <?= htmlspecialchars(substr($horarioclimaSp, 0, 2) . "h" . substr($horarioclimaSp, 2, 2)) ?>. <?php endif; ?> </span>
             </div>
             <div class="cabecalho-item cab-right">
                 <?= htmlspecialchars($anonumero) ?>
@@ -382,50 +466,100 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const config = await carregarConfig();
     const numColunas = parseInt(config.colunas || 4);
-    const cardPadding = config.cardpadding || "5px";
+    const posicaoImagem = config.posicaoimagem || "sup";
+    const cardPadding = config.cardoadding || "10px";
     const gapPercent = parseFloat(config.gappercent || 2); // ← lê o valor do JSON
     const cardWidth = (100 - (numColunas - 1) * gapPercent) / numColunas;
 
-    // Função para criar cada item card
-    function criarCard(item) {
+    // Função para criar cada item card, agora recebe imgpos
+    function criarCard(item, imgpos = "sup") {
         if (!item || !item.title) return null;
+
         const card = document.createElement("div");
         card.classList.add("card");
-        card.style.flex = `0 0 ${cardWidth}%`;
-        card.style.padding = cardPadding; // ← aplica o padding dinâmico aqui
+        // aplica padding configurável
+        card.style.padding = cardPadding;
 
-        let imgHTML = "";
+        // Chapéu
+        const chapeuHTML = item.chapeu
+            ? `<div class="card-chapeu">${item.chapeu}</div>`
+            : "";
+
+        // HTML imagem (vertical)
+        let imagemHTML = "";
         if (item.image) {
-            imgHTML = `
-                <div class="img-container">
-                    <a href="${item.url || '#'}" target="_blank" rel="noopener noreferrer">
-                        <img src="${item.image}" class="card-img" loading="lazy" alt="${item.title}">
-                    </a>
-                    ${item.imgrights ? `<p class="img-legenda">${item.imgrights}</p>` : ""}
-                </div>`;
-        } else if (item.imgdescript) {
-            imgHTML = `<p class="img-descricao"><em>${item.imgdescript}</em></p>`;
+            imagemHTML = `
+            <div class="card-imagem">
+                <a href="${item.url || '#'}" target="_blank" rel="noopener noreferrer">
+                    <img src="${item.image}" alt="${item.title}" title="${item.title}" loading="lazy">
+                </a>
+                ${item.imgdescript || item.imgrights ? `
+                <p class="img-legenda">
+                    ${item.imgdescript ? `${item.imgdescript}. ` : ""}
+                    ${item.imgrights ? `${item.imgrights}` : ""}
+                </p>` : ""}
+            </div>`;
         }
 
-        const dataPubl = item.datetime ? new Date(item.datetime).toLocaleDateString("pt-BR") : "";
+        // HTML imagem lateral (usado em esq/dir)
+        let imagemLateralHTML = "";
+        if (item.image) {
+            imagemLateralHTML = `
+            <div class="card-imagem-lateral">
+                <a href="${item.url || '#'}" target="_blank" rel="noopener noreferrer">
+                    <img src="${item.image}" alt="${item.title}" title="${item.title}" loading="lazy">
+                </a>
+                ${item.imgdescript || item.imgrights ? `
+                <p class="img-legenda">
+                    ${item.imgdescript ? `${item.imgdescript}. ` : ""}
+                    ${item.imgrights ? `${item.imgrights}` : ""}
+                </p>` : ""}
+            </div>`;
+        }
 
-        card.innerHTML = `
-            ${item.chapeu ? `<div class="direita" style="font-size:0.8em;font-weight:bold;text-transform:uppercase;margin: 0 10px 10px;">${item.chapeu}</div>` : ""}
-            ${imgHTML}
-            <div class="card-title">
-                <a href="${item.url || '#'}" class="hover" target="_blank" rel="noopener noreferrer">${item.title}</a>
-            </div>
-            <p class="direita" style="font-size:0.75em;">${dataPubl}</p>
-            <div class="card-content">
-                <p>${item.location ? `<b>${item.location.toUpperCase()} - </b>` : ""}${item.content || ""} […] 
-                ${item.url ? `<a href="${item.url}" class="link hover" target="_blank" rel="noopener noreferrer">Leia mais</a>` : ""}</p>
+        // Texto (com título, data, conteúdo)
+        const dataPubl = item.datetime
+            ? new Date(item.datetime).toLocaleDateString("pt-BR")
+            : "";
+
+        const textoHTML = `
+            <div class="card-texto">
+                <div class="card-title">
+                    <a href="${item.url || '#'}" target="_blank" rel="noopener noreferrer">
+                        ${item.title}
+                    </a>
+                </div>
+                ${dataPubl ? `<p class="card-data">${dataPubl}</p>` : ""}
+                <div class="card-content hyphenate">
+                    ${item.location ? `<b>${item.location.toUpperCase()} - </b>` : ""}
+                    ${item.content || ""}
+                    ${item.url ? ` <a href="${item.url}" class="link" target="_blank" rel="noopener noreferrer">Leia mais</a>` : ""}
+                </div>
             </div>`;
 
-        if (item.cardheight) {
-            const altura = parseInt(item.cardheight, 10);
-            if (!isNaN(altura)) card.style.height = `${altura}px`;
+        // Montagem dependendo de imgpos
+        if (imgpos === "esq" || imgpos === "dir") {
+            // chapéu no topo + corpo horizontal
+            const corpo = document.createElement("div");
+            corpo.classList.add("card-corpo");
+
+            if (imgpos === "esq") {
+                // imagem lateral à esquerda
+                corpo.innerHTML = `${imagemLateralHTML}${textoHTML}`;
+            } else {
+                // imagem lateral à direita
+                corpo.innerHTML = `${textoHTML}${imagemLateralHTML}`;
+            }
+
+            card.innerHTML = `${chapeuHTML}`;
+            card.appendChild(corpo);
         } else {
-            card.style.height = "auto";
+            // comportamento vertical (sup = imagem entre chapeu e título)
+            card.innerHTML = `
+                ${chapeuHTML}
+                ${imagemHTML}
+                ${textoHTML}
+            `;
         }
 
         return card;
@@ -463,7 +597,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // Monta as linhas e cards dinamicamente
-    async function preencherConteudo(containerId, arquivo, campo = null, valor = null) {
+    // assinado como solicitado: imgpos="sup" por padrão
+    async function preencherConteudo(containerId, arquivo, imgpos = "sup", campo = null, valor = null) {
         const container = document.getElementById(containerId);
         if (!container) {
             console.error(`Container "${containerId}" não encontrado.`);
@@ -471,73 +606,69 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
-    // Skeletons de carregamento
-    container.innerHTML = "";
+        // --- Skeletons de carregamento ---
+        container.innerHTML = "";
 
-    // Cria uma linha temporária
-    let linhaSkeleton = document.createElement("div");
-    linhaSkeleton.classList.add("linha-cards");
-    // Ao criar a linha (skeleton ou cards reais), adicione:
-    linhaSkeleton.style.display = "flex";
-    linhaSkeleton.style.gap = `${gapPercent}%`;
-    linhaSkeleton.style.flexWrap = "wrap";  // permite múltiplas linhas
-    linhaSkeleton.style.margin = "0";      // remove margem extra da linha
+        let linhaSkeleton = document.createElement("div");
+        linhaSkeleton.classList.add("linha-cards");
+        linhaSkeleton.style.display = "flex";
+        linhaSkeleton.style.gap = `${gapPercent}%`;
+        linhaSkeleton.style.margin = `${gapPercent / 2}% 0`;
+        linhaSkeleton.style.flexWrap = "wrap";
 
-    for (let i = 0; i < numColunas * 2; i++) {
-        const skeleton = document.createElement("div");
-        skeleton.classList.add("skeleton");
-        skeleton.style.flex = `0 0 ${cardWidth}%`; // largura igual aos cards reais
-        skeleton.style.padding = cardPadding;
-        linhaSkeleton.appendChild(skeleton);
+        for (let i = 0; i < numColunas * 2; i++) {
+            const skeleton = document.createElement("div");
+            skeleton.classList.add("skeleton");
+            skeleton.style.flex = `0 0 ${cardWidth}%`;
+            skeleton.style.padding = cardPadding;
+            linhaSkeleton.appendChild(skeleton);
 
-        // A cada numColunas skeletons, cria uma nova linha
-        if ((i + 1) % numColunas === 0) {
-            container.appendChild(linhaSkeleton);
-            linhaSkeleton = document.createElement("div");
-            linhaSkeleton.classList.add("linha-cards");
-            linhaSkeleton.style.display = "flex";
-            linhaSkeleton.style.gap = `${gapPercent}%`;
+            if ((i + 1) % numColunas === 0) {
+                container.appendChild(linhaSkeleton);
+                linhaSkeleton = document.createElement("div");
+                linhaSkeleton.classList.add("linha-cards");
+                linhaSkeleton.style.display = "flex";
+                linhaSkeleton.style.gap = `${gapPercent}%`;
+                linhaSkeleton.style.margin = `${gapPercent / 2}% 0`;
+                linhaSkeleton.style.flexWrap = "wrap";
+            }
         }
-    }
-
-    // Se sobrar skeletons que não completam a linha
-    if (linhaSkeleton.childNodes.length > 0) {
-        container.appendChild(linhaSkeleton);
-    }
+        if (linhaSkeleton.childNodes.length > 0) {
+            container.appendChild(linhaSkeleton);
+        }
 
         try {
             const conteudoJSON = await extrairConteudo(arquivo, campo, valor);
             container.innerHTML = "";
 
-            if (conteudoJSON.length === 0) {
+            if (!conteudoJSON.length) {
                 container.innerHTML = "<p>Nenhum conteúdo disponível.</p>";
                 return;
             }
 
             const fragment = document.createDocumentFragment();
-            // Ao criar cada linha de cards reais:
             let linha = document.createElement("div");
             linha.classList.add("linha-cards");
             linha.style.display = "flex";
-            linha.style.flexWrap = "wrap";      // permite múltiplas linhas
-            linha.style.justifyContent = "flex-start"; // primeiro card à esquerda
-            linha.style.gap = `${gapPercent}%`; // gap entre os cards
+            linha.style.flexWrap = "wrap";
+            linha.style.justifyContent = "flex-start";
+            linha.style.gap = `${gapPercent}%`;
+            linha.style.margin = `${gapPercent / 2}% 0`;
 
             let countVisible = 0;
-            conteudoJSON.forEach((item, index) => {
-                const card = criarCard(item);
+
+            conteudoJSON.forEach(item => {
+                const card = criarCard(item, imgpos);
                 if (!card) return;
 
-                // Ajuste opcional: remove margin extra no último card da linha
-                const posCol = countVisible % numColunas;
-                if (posCol === numColunas - 1) {
-                    card.style.marginRight = "0";
-                }
+                // Largura do card com base no número de colunas
+                card.style.flex = `0 0 ${cardWidth}%`;
+                card.style.marginBottom = "0"; // margem inferior entre linhas
 
                 linha.appendChild(card);
                 countVisible++;
 
-                // Ao completar a linha, cria nova linha
+                // Ao completar uma linha, cria nova linha
                 if (countVisible % numColunas === 0) {
                     fragment.appendChild(linha);
                     linha = document.createElement("div");
@@ -546,10 +677,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                     linha.style.flexWrap = "wrap";
                     linha.style.justifyContent = "flex-start";
                     linha.style.gap = `${gapPercent}%`;
+                    linha.style.margin = `${gapPercent / 2}% 0`;
                 }
             });
 
-            // Append final se sobrar cards
             if (linha.childNodes.length > 0) fragment.appendChild(linha);
             container.appendChild(fragment);
 
@@ -559,8 +690,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    // Chamada principal
-    preencherConteudo("container-conteudo-01", "conteudo.json", "type", "reportagem");
+    // Se quiser outro layout, troque "sup" (superior) por "esq" (esquerda) ou "dir" (direita)
+    preencherConteudo("container-conteudo-01", "conteudo.json", posicaoImagem, "type", "reportagem");
 });
 </script>
 
